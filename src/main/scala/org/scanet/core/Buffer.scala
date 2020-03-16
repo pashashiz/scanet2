@@ -108,8 +108,7 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
     case _ => error(s"Buffer[${classTag[A]}] is not supported")
   }
 
-  // todo, need to have put name, maybe after @spec
-  def putArray(src: Array[A]): Buffer[A] = put(src, 0, src.length)
+  def putAll(src: Array[A]): Buffer[A] = put(src, 0, src.length)
 
   def compact: Buffer[A] = classTag[A] match {
     case FloatTag => asFloat.compact(); this
@@ -131,205 +130,56 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
     case _ => error(s"Buffer[${classTag[A]}] is not supported")
   }
 
-  def capacity: Int = classTag[A] match {
-    case FloatTag => asFloat.capacity()
-    case DoubleTag => asDouble.capacity()
-    case LongTag => asLong.capacity()
-    case IntTag => asInt.capacity()
-    case ShortTag => asShort.capacity()
-    case ByteTag => asByte.capacity()
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
+  def capacity: Int = original.capacity()
+
+  def position: Int = original.position()
+
+  def position(newPosition: Int): Buffer[A] = {original.position(newPosition); this}
+
+  def limit: Int = original.limit()
+
+  def limit(newLimit: Int): Buffer[A] = {original.limit(); this}
+
+  def mark: Buffer[A] = {original.mark(); this}
+
+  def reset: Buffer[A] = {original.reset(); this}
+
+  def clear: Buffer[A] = {original.clear(); this}
+
+  def flip: Buffer[A] = {original.flip(); this}
+
+  def rewind: Buffer[A] = {original.rewind(); this}
+
+  def remaining: Int = original.remaining()
+
+  def hasRemaining: Boolean = original.hasRemaining
+
+  def isReadOnly: Boolean = original.isReadOnly
+
+  def hasArray: Boolean = original.hasArray
+
+  def array: Array[A] = {
+    if (hasArray) {
+      original.array().asInstanceOf[Array[A]]
+    } else {
+      val array = Array.ofDim[A](limit)
+      while (hasRemaining) {
+        array(position) = get
+      }
+      flip
+      array
+    }
   }
 
-  def position: Int = classTag[A] match {
-    case FloatTag => asFloat.position()
-    case DoubleTag => asDouble.position()
-    case LongTag => asLong.position()
-    case IntTag => asInt.position()
-    case ShortTag => asShort.position()
-    case ByteTag => asByte.position()
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
+  def arrayOffset: Int = original.arrayOffset()
 
-  def position(newPosition: Int): Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.position(newPosition); this
-    case DoubleTag => asDouble.position(newPosition); this
-    case LongTag => asLong.position(newPosition); this
-    case IntTag => asInt.position(newPosition); this
-    case ShortTag => asShort.position(newPosition); this
-    case ByteTag => asByte.position(newPosition); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
+  def isDirect: Boolean = original.isDirect
 
-  def limit: Int = classTag[A] match {
-    case FloatTag => asFloat.limit()
-    case DoubleTag => asDouble.limit()
-    case LongTag => asLong.limit()
-    case IntTag => asInt.limit()
-    case ShortTag => asShort.limit()
-    case ByteTag => asByte.limit()
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
+  override def toString: String = original.toString
 
-  def limit(newLimit: Int): Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.limit(newLimit); this
-    case DoubleTag => asDouble.limit(newLimit); this
-    case LongTag => asLong.limit(newLimit); this
-    case IntTag => asInt.limit(newLimit); this
-    case ShortTag => asShort.limit(newLimit); this
-    case ByteTag => asByte.limit(newLimit); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
+  override def hashCode: Int = original.hashCode()
 
-  def mark: Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.mark(); this
-    case DoubleTag => asDouble.mark(); this
-    case LongTag => asLong.mark(); this
-    case IntTag => asInt.mark(); this
-    case ShortTag => asShort.mark(); this
-    case ByteTag => asByte.mark(); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def reset: Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.reset(); this
-    case DoubleTag => asDouble.reset(); this
-    case LongTag => asLong.reset(); this
-    case IntTag => asInt.reset(); this
-    case ShortTag => asShort.reset(); this
-    case ByteTag => asByte.reset(); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def clear: Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.clear(); this
-    case DoubleTag => asDouble.clear(); this
-    case LongTag => asLong.clear(); this
-    case IntTag => asInt.clear(); this
-    case ShortTag => asShort.clear(); this
-    case ByteTag => asByte.clear(); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def flip: Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.flip(); this
-    case DoubleTag => asDouble.flip(); this
-    case LongTag => asLong.flip(); this
-    case IntTag => asInt.flip(); this
-    case ShortTag => asShort.flip(); this
-    case ByteTag => asByte.flip(); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def rewind: Buffer[A] = classTag[A] match {
-    case FloatTag => asFloat.rewind(); this
-    case DoubleTag => asDouble.rewind(); this
-    case LongTag => asLong.rewind(); this
-    case IntTag => asInt.rewind(); this
-    case ShortTag => asShort.rewind(); this
-    case ByteTag => asByte.rewind(); this
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def remaining: Int = classTag[A] match {
-    case FloatTag => asFloat.remaining()
-    case DoubleTag => asDouble.remaining()
-    case LongTag => asLong.remaining()
-    case IntTag => asInt.remaining()
-    case ShortTag => asShort.remaining()
-    case ByteTag => asByte.remaining()
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def hasRemaining: Boolean = classTag[A] match {
-    case FloatTag => asFloat.hasRemaining
-    case DoubleTag => asDouble.hasRemaining
-    case LongTag => asLong.hasRemaining
-    case IntTag => asInt.hasRemaining
-    case ShortTag => asShort.hasRemaining
-    case ByteTag => asByte.hasRemaining
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def isReadOnly: Boolean = classTag[A] match {
-    case FloatTag => asFloat.isReadOnly
-    case DoubleTag => asDouble.isReadOnly
-    case LongTag => asLong.isReadOnly
-    case IntTag => asInt.isReadOnly
-    case ShortTag => asShort.isReadOnly
-    case ByteTag => asByte.isReadOnly
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def hasArray: Boolean = classTag[A] match {
-    case FloatTag => asFloat.hasArray
-    case DoubleTag => asDouble.hasArray
-    case LongTag => asLong.hasArray
-    case IntTag => asInt.hasArray
-    case ShortTag => asShort.hasArray
-    case ByteTag => asByte.hasArray
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def array: Array[A] = classTag[A] match {
-    case FloatTag => asFloat.array().asInstanceOf[Array[A]]
-    case DoubleTag => asDouble.array().asInstanceOf[Array[A]]
-    case LongTag => asLong.array().asInstanceOf[Array[A]]
-    case IntTag => asInt.array().asInstanceOf[Array[A]]
-    case ShortTag => asShort.array().asInstanceOf[Array[A]]
-    case ByteTag => asByte.array().asInstanceOf[Array[A]]
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def arrayOffset: Int = classTag[A] match {
-    case FloatTag => asFloat.arrayOffset
-    case DoubleTag => asDouble.arrayOffset
-    case LongTag => asLong.arrayOffset
-    case IntTag => asInt.arrayOffset
-    case ShortTag => asShort.arrayOffset
-    case ByteTag => asByte.arrayOffset
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  def isDirect: Boolean = classTag[A] match {
-    case FloatTag => asFloat.isDirect
-    case DoubleTag => asDouble.isDirect
-    case LongTag => asLong.isDirect
-    case IntTag => asInt.isDirect
-    case ShortTag => asShort.isDirect
-    case ByteTag => asByte.isDirect
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  override def toString: String = classTag[A] match {
-    case FloatTag => asFloat.toString
-    case DoubleTag => asDouble.toString
-    case LongTag => asLong.toString
-    case IntTag => asInt.toString
-    case ShortTag => asShort.toString
-    case ByteTag => asByte.toString
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  override def hashCode: Int = classTag[A] match {
-    case FloatTag => asFloat.hashCode
-    case DoubleTag => asDouble.hashCode
-    case LongTag => asLong.hashCode
-    case IntTag => asInt.hashCode
-    case ShortTag => asShort.hashCode
-    case ByteTag => asByte.hashCode
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
-
-  override def equals(ob: Any): Boolean = classTag[A] match {
-    case FloatTag => asFloat.equals(ob)
-    case DoubleTag => asDouble.equals(ob)
-    case LongTag => asLong.equals(ob)
-    case IntTag => asInt.equals(ob)
-    case ShortTag => asShort.equals(ob)
-    case ByteTag => asByte.equals(ob)
-    case _ => error(s"Buffer[${classTag[A]}] is not supported")
-  }
+  override def equals(ob: Any): Boolean = original.equals(ob)
 
   override def compareTo(that: Buffer[A]): Int = classTag[A] match {
     case FloatTag => asFloat.compareTo(that.asFloat)
@@ -344,18 +194,7 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
 
 object Buffer {
 
-  def main(args: Array[String]): Unit = {
-    //println(Buffer.allocate[Float](1))
-    println(Buffer.wrap(Array(1, 2, 3)).get)
-  }
-
   def apply[A: ClassTag](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
-  def apply(original: FloatBuffer): Buffer[Float] = new Buffer(original)
-  def apply(original: DoubleBuffer): Buffer[Double] = new Buffer(original)
-  def apply(original: LongBuffer): Buffer[Long] = new Buffer(original)
-  def apply(original: IntBuffer): Buffer[Int] = new Buffer(original)
-  def apply(original: ShortBuffer): Buffer[Short] = new Buffer(original)
-  def apply(original: ByteBuffer): Buffer[Byte] = new Buffer(original)
 
   def allocate[A: ClassTag](capacity: Int): Buffer[A] = {
      classTag[A] match {
@@ -371,16 +210,38 @@ object Buffer {
 
   def wrap[A: ClassTag](array: Array[A], offset: Int, length: Int): Buffer[A] = {
     classTag[A] match {
-      case FloatTag => Buffer(FloatBuffer.wrap(array.asInstanceOf[Array[Float]], offset, length)).asInstanceOf[Buffer[A]]
-      case DoubleTag => Buffer(DoubleBuffer.wrap(array.asInstanceOf[Array[Double]], offset, length)).asInstanceOf[Buffer[A]]
-      case LongTag => Buffer(LongBuffer.wrap(array.asInstanceOf[Array[Long]], offset, length)).asInstanceOf[Buffer[A]]
-      case IntTag => Buffer(IntBuffer.wrap(array.asInstanceOf[Array[Int]], offset, length)).asInstanceOf[Buffer[A]]
-      case ShortTag => Buffer(ShortBuffer.wrap(array.asInstanceOf[Array[Short]], offset, length)).asInstanceOf[Buffer[A]]
-      case ByteTag => Buffer(ByteBuffer.wrap(array.asInstanceOf[Array[Byte]], offset, length)).asInstanceOf[Buffer[A]]
+      case FloatTag => Buffer[A](FloatBuffer.wrap(array.asInstanceOf[Array[Float]], offset, length))
+      case DoubleTag => Buffer[A](DoubleBuffer.wrap(array.asInstanceOf[Array[Double]], offset, length))
+      case LongTag => Buffer[A](LongBuffer.wrap(array.asInstanceOf[Array[Long]], offset, length))
+      case IntTag => Buffer[A](IntBuffer.wrap(array.asInstanceOf[Array[Int]], offset, length))
+      case ShortTag => Buffer[A](ShortBuffer.wrap(array.asInstanceOf[Array[Short]], offset, length))
+      case ByteTag => Buffer[A](ByteBuffer.wrap(array.asInstanceOf[Array[Byte]], offset, length))
       case _ => error(s"Buffer[${classTag[A]}] is not supported")
     }
   }
 
   def wrap[A: ClassTag](array: Array[A]): Buffer[A] = wrap(array, 0, array.length)
+
+  // ## Implicit conversions ##
+  // TBuffer -> Buffer[T]
+  // Buffer[T] -> TBuffer
+
+  implicit def fromFloatBufferToBuffer(buffer: FloatBuffer): Buffer[Float] = new Buffer(buffer)
+  implicit def fromBufferToFloatBuffer(buffer: Buffer[Float]): FloatBuffer = buffer.asFloat
+
+  implicit def fromDoubleBufferToBuffer(buffer: DoubleBuffer): Buffer[Double] = new Buffer(buffer)
+  implicit def fromBufferToDoubleBuffer(buffer: Buffer[Double]): DoubleBuffer = buffer.asDouble
+
+  implicit def fromLongBufferToBuffer(buffer: LongBuffer): Buffer[Long] = new Buffer(buffer)
+  implicit def fromBufferToLongBuffer(buffer: Buffer[Long]): LongBuffer = buffer.asLong
+
+  implicit def fromIntBufferToBuffer(buffer: IntBuffer): Buffer[Int] = new Buffer(buffer)
+  implicit def fromBufferToIntBuffer(buffer: Buffer[Int]): IntBuffer = buffer.asInt
+
+  implicit def fromShortBufferToBuffer(buffer: ShortBuffer): Buffer[Short] = new Buffer(buffer)
+  implicit def fromBufferToShortBuffer(buffer: Buffer[Short]): ShortBuffer = buffer.asShort
+
+  implicit def fromByteBufferToBuffer(buffer: ByteBuffer): Buffer[Byte] = new Buffer(buffer)
+  implicit def fromBufferToByteBuffer(buffer: Buffer[Byte]): ByteBuffer = buffer.asByte
 
 }

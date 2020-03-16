@@ -1,0 +1,717 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x0000000138de5746, pid=65343, tid=0x0000000000001b03
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_202-b08) (build 1.8.0_202-b08)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.202-b08 mixed mode bsd-amd64 compressed oops)
+# Problematic frame:
+# C  [libtensorflow_cc.so.1+0x4856746]  tensorflow::Tensor::tensor_data() const+0x16
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f9f1980c800):  JavaThread "ScalaTest-run-running-OpTest" [_thread_in_native, id=6915, stack(0x0000700002e0b000,0x0000700002f0b000)]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 0 (unknown), si_addr: 0x0000000000000000
+
+Registers:
+RAX=0x00027f9f195d3500, RBX=0x0000000000000000, RCX=0x000000010ea2c5e0, RDX=0x0000000000000000
+RSP=0x0000700002f07830, RBP=0x0000700002f07840, RSI=0x0000000000000007, RDI=0x00007f9f195d2900
+R8 =0x00000007c022d7c0, R9 =0x000000000000024a, R10=0x0000000117f06110, R11=0x0000000138de5730
+R12=0x0000000000000000, R13=0x00007f9f1980c9f8, R14=0x0000700002f07930, R15=0x00007f9f1980c800
+RIP=0x0000000138de5746, EFLAGS=0x0000000000010206, ERR=0x0000000000000000
+  TRAPNO=0x000000000000000d
+
+Top of Stack: (sp=0x0000700002f07830)
+0x0000700002f07830:   0000000000000000 00007f9f195d2900
+0x0000700002f07840:   0000700002f078b0 00000001166f21fa
+0x0000700002f07850:   00007f9f1980c800 000000011731a690
+0x0000700002f07860:   00007f9f1980c800 000000011731a690
+0x0000700002f07870:   00007f9f1980c800 000000011731a690
+0x0000700002f07880:   000000011731a690 000000011731a690
+0x0000700002f07890:   0000000000000000 000000011731a688
+0x0000700002f078a0:   0000700002f07930 00007f9f1980c800
+0x0000700002f078b0:   0000700002f07910 0000000117f72a88
+0x0000700002f078c0:   00000001179ea850 0000000117f724c2
+0x0000700002f078d0:   0000700002f078d0 000000011731a688
+0x0000700002f078e0:   0000700002f07930 00000001179e9448
+0x0000700002f078f0:   0000000000000000 000000011731a690
+0x0000700002f07900:   0000000000000000 0000700002f07930
+0x0000700002f07910:   0000700002f07980 0000000117f5a0e0
+0x0000700002f07920:   0000000000000000 0000000117f68d3b
+0x0000700002f07930:   000000078be80080 00000007768a8320
+0x0000700002f07940:   0000700002f07940 00000001179ea837
+0x0000700002f07950:   0000700002f07990 00000001179ea9f0
+0x0000700002f07960:   0000000000000000 00000001179ea850
+0x0000700002f07970:   0000700002f07930 0000700002f07990
+0x0000700002f07980:   0000700002f079d8 0000000117f5a0e0
+0x0000700002f07990:   000000078be80000 0000700002f07998
+0x0000700002f079a0:   00000001179ea479 0000700002f079e8
+0x0000700002f079b0:   00000001179ea9f0 0000000000000000
+0x0000700002f079c0:   00000001179ea498 0000700002f07990
+0x0000700002f079d0:   0000700002f079e8 0000700002f07a38
+0x0000700002f079e0:   0000000117f5a0e0 000000078be80000
+0x0000700002f079f0:   000000078be88430 0000700002f079f8
+0x0000700002f07a00:   00000001179ea6a2 0000700002f07a48
+0x0000700002f07a10:   00000001179ea9f0 0000000000000000
+0x0000700002f07a20:   00000001179ea6c8 0000700002f079e8 
+
+Instructions: (pc=0x0000000138de5746)
+0x0000000138de5726:   ff ff de f7 ff ff 8c f8 ff ff 55 48 89 e5 53 50
+0x0000000138de5736:   48 8b 47 18 31 d2 bb 00 00 00 00 48 85 c0 74 0c
+0x0000000138de5746:   48 8b 58 10 e8 f1 e6 ff ff 48 89 c2 48 89 d8 48
+0x0000000138de5756:   83 c4 08 5b 5d c3 0f 1f 40 00 55 48 89 e5 41 56 
+
+Register to memory mapping:
+
+RAX=0x00027f9f195d3500 is an unknown value
+RBX=0x0000000000000000 is an unknown value
+RCX=0x000000010ea2c5e0: UseMembar+0 in /Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/server/libjvm.dylib at 0x000000010e200000
+RDX=0x0000000000000000 is an unknown value
+RSP=0x0000700002f07830 is pointing into the stack for thread: 0x00007f9f1980c800
+RBP=0x0000700002f07840 is pointing into the stack for thread: 0x00007f9f1980c800
+RSI=0x0000000000000007 is an unknown value
+RDI=0x00007f9f195d2900 is an unknown value
+R8 =0x00000007c022d7c0 is pointing into metadata
+R9 =0x000000000000024a is an unknown value
+R10=0x0000000117f06110 is an unknown value
+R11=0x0000000138de5730: _ZNK10tensorflow6Tensor11tensor_dataEv+0 in /Users/pavlo/.javacpp/cache/tensorflow-1.15.0-1.5.2-macosx-x86_64.jar/org/bytedeco/tensorflow/macosx-x86_64/libtensorflow_cc.so.1 at 0x000000013458f000
+R12=0x0000000000000000 is an unknown value
+R13=0x00007f9f1980c9f8 is an unknown value
+R14=0x0000700002f07930 is pointing into the stack for thread: 0x00007f9f1980c800
+R15=0x00007f9f1980c800 is a thread
+
+
+Stack: [0x0000700002e0b000,0x0000700002f0b000],  sp=0x0000700002f07830,  free space=1010k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libtensorflow_cc.so.1+0x4856746]  tensorflow::Tensor::tensor_data() const+0x16
+C  [libjnitensorflow.dylib+0x93d1fa]  Java_org_bytedeco_tensorflow_Tensor_tensor_1data+0x5a
+j  org.bytedeco.tensorflow.Tensor.tensor_data()Lorg/bytedeco/javacpp/BytePointer;+0
+j  org.scanet.linalg.Tensor.data$1()Lorg/scanet/core/NativeArray;+7
+j  org.scanet.linalg.Tensor.buffer()Lorg/scanet/core/Buffer;+1
+j  org.scanet.linalg.Tensor.toString()Ljava/lang/String;+50
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x2f0d1e]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x6ae
+V  [libjvm.dylib+0x32805c]  jni_invoke_nonstatic(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, Thread*)+0x2ec
+V  [libjvm.dylib+0x3183a8]  jni_CallObjectMethodA+0xe4
+C  [libjdwp.dylib+0x17daf]  invoker_doInvoke+0xc1a
+C  [libjdwp.dylib+0x13ff0]  reportEvents+0x21b
+C  [libjdwp.dylib+0x1434d]  event_callback+0x342
+C  [libjdwp.dylib+0x11af1]  cbBreakpoint+0xee
+V  [libjvm.dylib+0x3980de]  JvmtiExport::post_raw_breakpoint(JavaThread*, Method*, unsigned char*)+0x162
+V  [libjvm.dylib+0x2eb627]  InterpreterRuntime::_breakpoint(JavaThread*, Method*, unsigned char*)+0x1f
+j  org.scanet.linalg.Tensor.toScalar()Ljava/lang/Object;+0
+j  org.scanet.linalg.OpTest.$anonfun$new$1()V+38
+j  org.scanet.linalg.OpTest$$Lambda$73.apply$mcV$sp()V+0
+j  scala.runtime.java8.JFunction0$mcV$sp.apply()Ljava/lang/Object;+1
+j  org.scalatest.OutcomeOf.outcomeOf(Lscala/Function0;)Lorg/scalatest/Outcome;+1
+j  org.scalatest.OutcomeOf.outcomeOf$(Lorg/scalatest/OutcomeOf;Lscala/Function0;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.OutcomeOf$.outcomeOf(Lscala/Function0;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.Transformer.apply()Lorg/scalatest/Outcome;+7
+j  org.scalatest.Transformer.apply()Ljava/lang/Object;+1
+j  org.scalatest.flatspec.AnyFlatSpecLike$$anon$5.apply()Lorg/scalatest/Outcome;+10
+j  org.scalatest.TestSuite.withFixture(Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+1
+j  org.scalatest.TestSuite.withFixture$(Lorg/scalatest/TestSuite;Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.flatspec.AnyFlatSpec.withFixture(Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.flatspec.AnyFlatSpecLike.invokeWithFixture$1(Lorg/scalatest/SuperEngine$TestLeaf;Lorg/scalatest/Args;Ljava/lang/String;)Lorg/scalatest/Outcome;+29
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$runTest$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lorg/scalatest/Args;Ljava/lang/String;Lorg/scalatest/SuperEngine$TestLeaf;)Lorg/scalatest/Outcome;+4
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$126.apply(Ljava/lang/Object;)Ljava/lang/Object;+16
+j  org.scalatest.SuperEngine.runTestImpl(Lorg/scalatest/Suite;Ljava/lang/String;Lorg/scalatest/Args;ZLscala/Function1;)Lorg/scalatest/Status;+506
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTest(Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+18
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTest$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.runTest(Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$runTests$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$121.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+12
+j  org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Lorg/scalatest/SuperEngine;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lscala/collection/mutable/ListBuffer;Lscala/Function2;ZLorg/scalatest/SuperEngine$Node;)Ljava/lang/Object;+229
+j  org.scalatest.SuperEngine$$Lambda$122.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.SuperEngine.traverseSubNodes$1(Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lscala/collection/mutable/ListBuffer;Lscala/Function2;Z)V+22
+j  org.scalatest.SuperEngine.runTestsInBranch(Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;ZLscala/Function2;)Lorg/scalatest/Status;+97
+j  org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Lorg/scalatest/SuperEngine;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lscala/collection/mutable/ListBuffer;Lscala/Function2;ZLorg/scalatest/SuperEngine$Node;)Ljava/lang/Object;+584
+j  org.scalatest.SuperEngine$$Lambda$122.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.SuperEngine.traverseSubNodes$1(Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lscala/collection/mutable/ListBuffer;Lscala/Function2;Z)V+22
+j  org.scalatest.SuperEngine.runTestsInBranch(Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;ZLscala/Function2;)Lorg/scalatest/Status;+191
+j  org.scalatest.SuperEngine.runTestsImpl(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;Lorg/scalatest/Informer;ZLscala/Function2;)Lorg/scalatest/Status;+410
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTests(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+22
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTests$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.runTests(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.Suite.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+235
+j  org.scalatest.Suite.run$(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.org$scalatest$flatspec$AnyFlatSpecLike$$super$run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$run$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$115.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+12
+j  org.scalatest.SuperEngine.runImpl(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;Lscala/Function2;)Lorg/scalatest/Status;+358
+j  org.scalatest.flatspec.AnyFlatSpecLike.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+15
+j  org.scalatest.flatspec.AnyFlatSpecLike.run$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.tools.SuiteRunner.run()V+184
+j  org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13(Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/DispatchReporter;Lorg/scalatest/Stopper;Lorg/scalatest/ConfigMap;Lscala/runtime/ObjectRef;Lscala/collection/immutable/Set;Lorg/scalatest/tools/SuiteConfig;)V+162
+j  org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13$adapted(Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/DispatchReporter;Lorg/scalatest/Stopper;Lorg/scalatest/ConfigMap;Lscala/runtime/ObjectRef;Lscala/collection/immutable/Set;Lorg/scalatest/tools/SuiteConfig;)Ljava/lang/Object;+12
+j  org.scalatest.tools.Runner$$$Lambda$112.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.tools.Runner$.doRunRunRunDaDoRunRun(Lorg/scalatest/DispatchReporter;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/Stopper;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Ljava/lang/ClassLoader;Lorg/scalatest/tools/RunDoneListener;ILorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;)V+1488
+j  org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24(Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;Ljava/lang/ClassLoader;Lorg/scalatest/DispatchReporter;)V+49
+j  org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24$adapted(Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;Ljava/lang/ClassLoader;Lorg/scalatest/DispatchReporter;)Ljava/lang/Object;+32
+j  org.scalatest.tools.Runner$$$Lambda$60.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+72
+j  org.scalatest.tools.Runner$.withClassLoaderAndDispatchReporter(Lscala/collection/immutable/List;Lorg/scalatest/tools/ReporterConfigurations;Lscala/Option;Lscala/Option;ZJJLscala/Function2;)V+44
+j  org.scalatest.tools.Runner$.runOptionallyWithPassFailReporter([Ljava/lang/String;Z)Z+2026
+j  org.scalatest.tools.Runner$.run([Ljava/lang/String;)Z+18
+j  org.scalatest.tools.Runner.run([Ljava/lang/String;)Z+4
+j  org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.runScalaTest2([Ljava/lang/String;)V+776
+j  org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.main([Ljava/lang/String;)V+7
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x2f0d1e]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x6ae
+V  [libjvm.dylib+0x327cc5]  jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, Thread*)+0x1bf
+V  [libjvm.dylib+0x320a51]  jni_CallStaticVoidMethod+0x15d
+C  [java+0x38c6]  JavaMain+0x9c4
+C  [libsystem_pthread.dylib+0x393b]  _pthread_body+0xb4
+C  [libsystem_pthread.dylib+0x3887]  _pthread_body+0x0
+C  [libsystem_pthread.dylib+0x308d]  thread_start+0xd
+C  0x0000000000000000
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.bytedeco.tensorflow.Tensor.tensor_data()Lorg/bytedeco/javacpp/BytePointer;+0
+j  org.scanet.linalg.Tensor.data$1()Lorg/scanet/core/NativeArray;+7
+j  org.scanet.linalg.Tensor.buffer()Lorg/scanet/core/Buffer;+1
+j  org.scanet.linalg.Tensor.toString()Ljava/lang/String;+50
+v  ~StubRoutines::call_stub
+j  org.scanet.linalg.Tensor.toScalar()Ljava/lang/Object;+0
+j  org.scanet.linalg.OpTest.$anonfun$new$1()V+38
+j  org.scanet.linalg.OpTest$$Lambda$73.apply$mcV$sp()V+0
+j  scala.runtime.java8.JFunction0$mcV$sp.apply()Ljava/lang/Object;+1
+j  org.scalatest.OutcomeOf.outcomeOf(Lscala/Function0;)Lorg/scalatest/Outcome;+1
+j  org.scalatest.OutcomeOf.outcomeOf$(Lorg/scalatest/OutcomeOf;Lscala/Function0;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.OutcomeOf$.outcomeOf(Lscala/Function0;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.Transformer.apply()Lorg/scalatest/Outcome;+7
+j  org.scalatest.Transformer.apply()Ljava/lang/Object;+1
+j  org.scalatest.flatspec.AnyFlatSpecLike$$anon$5.apply()Lorg/scalatest/Outcome;+10
+j  org.scalatest.TestSuite.withFixture(Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+1
+j  org.scalatest.TestSuite.withFixture$(Lorg/scalatest/TestSuite;Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.flatspec.AnyFlatSpec.withFixture(Lorg/scalatest/TestSuite$NoArgTest;)Lorg/scalatest/Outcome;+2
+j  org.scalatest.flatspec.AnyFlatSpecLike.invokeWithFixture$1(Lorg/scalatest/SuperEngine$TestLeaf;Lorg/scalatest/Args;Ljava/lang/String;)Lorg/scalatest/Outcome;+29
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$runTest$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lorg/scalatest/Args;Ljava/lang/String;Lorg/scalatest/SuperEngine$TestLeaf;)Lorg/scalatest/Outcome;+4
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$126.apply(Ljava/lang/Object;)Ljava/lang/Object;+16
+j  org.scalatest.SuperEngine.runTestImpl(Lorg/scalatest/Suite;Ljava/lang/String;Lorg/scalatest/Args;ZLscala/Function1;)Lorg/scalatest/Status;+506
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTest(Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+18
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTest$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.runTest(Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$runTests$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$121.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+12
+j  org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Lorg/scalatest/SuperEngine;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lscala/collection/mutable/ListBuffer;Lscala/Function2;ZLorg/scalatest/SuperEngine$Node;)Ljava/lang/Object;+229
+j  org.scalatest.SuperEngine$$Lambda$122.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.SuperEngine.traverseSubNodes$1(Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lscala/collection/mutable/ListBuffer;Lscala/Function2;Z)V+22
+j  org.scalatest.SuperEngine.runTestsInBranch(Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;ZLscala/Function2;)Lorg/scalatest/Status;+97
+j  org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Lorg/scalatest/SuperEngine;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lscala/collection/mutable/ListBuffer;Lscala/Function2;ZLorg/scalatest/SuperEngine$Node;)Ljava/lang/Object;+584
+j  org.scalatest.SuperEngine$$Lambda$122.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.SuperEngine.traverseSubNodes$1(Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;Lorg/scalatest/Suite;Lscala/collection/mutable/ListBuffer;Lscala/Function2;Z)V+22
+j  org.scalatest.SuperEngine.runTestsInBranch(Lorg/scalatest/Suite;Lorg/scalatest/SuperEngine$Branch;Lorg/scalatest/Args;ZLscala/Function2;)Lorg/scalatest/Status;+191
+j  org.scalatest.SuperEngine.runTestsImpl(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;Lorg/scalatest/Informer;ZLscala/Function2;)Lorg/scalatest/Status;+410
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTests(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+22
+j  org.scalatest.flatspec.AnyFlatSpecLike.runTests$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.runTests(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.Suite.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+235
+j  org.scalatest.Suite.run$(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.org$scalatest$flatspec$AnyFlatSpecLike$$super$run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike.$anonfun$run$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpecLike$$Lambda$115.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+12
+j  org.scalatest.SuperEngine.runImpl(Lorg/scalatest/Suite;Lscala/Option;Lorg/scalatest/Args;Lscala/Function2;)Lorg/scalatest/Status;+358
+j  org.scalatest.flatspec.AnyFlatSpecLike.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+15
+j  org.scalatest.flatspec.AnyFlatSpecLike.run$(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.flatspec.AnyFlatSpec.run(Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;+3
+j  org.scalatest.tools.SuiteRunner.run()V+184
+j  org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13(Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/DispatchReporter;Lorg/scalatest/Stopper;Lorg/scalatest/ConfigMap;Lscala/runtime/ObjectRef;Lscala/collection/immutable/Set;Lorg/scalatest/tools/SuiteConfig;)V+162
+j  org.scalatest.tools.Runner$.$anonfun$doRunRunRunDaDoRunRun$13$adapted(Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/DispatchReporter;Lorg/scalatest/Stopper;Lorg/scalatest/ConfigMap;Lscala/runtime/ObjectRef;Lscala/collection/immutable/Set;Lorg/scalatest/tools/SuiteConfig;)Ljava/lang/Object;+12
+j  org.scalatest.tools.Runner$$$Lambda$112.apply(Ljava/lang/Object;)Ljava/lang/Object;+32
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+14
+j  org.scalatest.tools.Runner$.doRunRunRunDaDoRunRun(Lorg/scalatest/DispatchReporter;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/Stopper;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Ljava/lang/ClassLoader;Lorg/scalatest/tools/RunDoneListener;ILorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;)V+1488
+j  org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24(Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;Ljava/lang/ClassLoader;Lorg/scalatest/DispatchReporter;)V+49
+j  org.scalatest.tools.Runner$.$anonfun$runOptionallyWithPassFailReporter$24$adapted(Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/Set;Lscala/collection/immutable/Set;Lorg/scalatest/ConfigMap;ZLscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lscala/collection/immutable/List;Lorg/scalatest/tools/ConcurrentConfig;Lscala/Option;Lscala/collection/immutable/Set;Lorg/scalatest/time/Span;Ljava/lang/ClassLoader;Lorg/scalatest/DispatchReporter;)Ljava/lang/Object;+32
+j  org.scalatest.tools.Runner$$$Lambda$60.apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;+72
+j  org.scalatest.tools.Runner$.withClassLoaderAndDispatchReporter(Lscala/collection/immutable/List;Lorg/scalatest/tools/ReporterConfigurations;Lscala/Option;Lscala/Option;ZJJLscala/Function2;)V+44
+j  org.scalatest.tools.Runner$.runOptionallyWithPassFailReporter([Ljava/lang/String;Z)Z+2026
+j  org.scalatest.tools.Runner$.run([Ljava/lang/String;)Z+18
+j  org.scalatest.tools.Runner.run([Ljava/lang/String;)Z+4
+j  org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.runScalaTest2([Ljava/lang/String;)V+776
+j  org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner.main([Ljava/lang/String;)V+7
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f9f1bd08800 JavaThread "JavaCPP Deallocator" daemon [_thread_blocked, id=24323, stack(0x00007000045d3000,0x00007000046d3000)]
+  0x00007f9f1e244800 JavaThread "ScalaTest-dispatcher" [_thread_blocked, id=23811, stack(0x00007000044d0000,0x00007000045d0000)]
+  0x00007f9f1d09e800 JavaThread "Service Thread" daemon [_thread_blocked, id=22787, stack(0x00007000042ca000,0x00007000043ca000)]
+  0x00007f9f1c01d000 JavaThread "C1 CompilerThread3" daemon [_thread_blocked, id=22275, stack(0x00007000041c7000,0x00007000042c7000)]
+  0x00007f9f1c021800 JavaThread "C2 CompilerThread2" daemon [_thread_blocked, id=21763, stack(0x00007000040c4000,0x00007000041c4000)]
+  0x00007f9f1d806000 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=21251, stack(0x0000700003fc1000,0x00007000040c1000)]
+  0x00007f9f1b82a000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=20739, stack(0x0000700003ebe000,0x0000700003fbe000)]
+  0x00007f9f1d805000 JavaThread "JDWP Command Reader" daemon [_thread_in_native, id=20227, stack(0x0000700003dbb000,0x0000700003ebb000)]
+  0x00007f9f1d00e000 JavaThread "JDWP Event Helper Thread" daemon [_thread_blocked, id=19715, stack(0x0000700003cb8000,0x0000700003db8000)]
+  0x00007f9f1d804800 JavaThread "JDWP Transport Listener: dt_socket" daemon [_thread_blocked, id=19203, stack(0x0000700003bb5000,0x0000700003cb5000)]
+  0x00007f9f1d00d800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=18691, stack(0x0000700003ab2000,0x0000700003bb2000)]
+  0x00007f9f1d031800 JavaThread "Finalizer" daemon [_thread_blocked, id=14339, stack(0x000070000392c000,0x0000700003a2c000)]
+  0x00007f9f1981e800 JavaThread "Reference Handler" daemon [_thread_blocked, id=13827, stack(0x0000700003829000,0x0000700003929000)]
+=>0x00007f9f1980c800 JavaThread "ScalaTest-run-running-OpTest" [_thread_in_native, id=6915, stack(0x0000700002e0b000,0x0000700002f0b000)]
+
+Other Threads:
+  0x00007f9f1981b800 VMThread [stack: 0x0000700003726000,0x0000700003826000] [id=13315]
+  0x00007f9f1d011000 WatcherThread [stack: 0x00007000043cd000,0x00007000044cd000] [id=23299]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+heap address: 0x00000006c0000000, size: 4096 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x00000007c0000000
+
+Heap:
+ PSYoungGen      total 523776K, used 198777K [0x000000076ab00000, 0x000000078bf00000, 0x00000007c0000000)
+  eden space 523264K, 37% used [0x000000076ab00000,0x0000000776cde728,0x000000078aa00000)
+  from space 512K, 50% used [0x000000078be80000,0x000000078bec0000,0x000000078bf00000)
+  to   space 9216K, 0% used [0x000000078ad00000,0x000000078ad00000,0x000000078b600000)
+ ParOldGen       total 93184K, used 7092K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06ed380,0x00000006c5b00000)
+ Metaspace       used 25206K, capacity 25850K, committed 26112K, reserved 1071104K
+  class space    used 3447K, capacity 3555K, committed 3584K, reserved 1048576K
+
+Card table byte_map: [0x000000010f579000,0x000000010fd7a000] byte_map_base: 0x000000010bf79000
+
+Marking Bits: (ParMarkBitMap*) 0x000000010eafbe40
+ Begin Bits: [0x0000000126f52000, 0x000000012af52000)
+ End Bits:   [0x000000012af52000, 0x000000012ef52000)
+
+Polling page: 0x000000010d091000
+
+CodeCache: size=245760Kb used=5737Kb max_used=5751Kb free=240022Kb
+ bounds [0x0000000117f52000, 0x0000000118502000, 0x0000000126f52000]
+ total_blobs=1771 nmethods=1377 adapters=316
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 7.200 Thread 0x00007f9f1c01d000 1374       3       sun.nio.fs.NativeBuffer::release (5 bytes)
+Event: 7.200 Thread 0x00007f9f1c01d000 nmethod 1374 0x00000001184ea610 code [0x00000001184ea780, 0x00000001184ea908]
+Event: 7.200 Thread 0x00007f9f1c01d000 1369       3       sun.nio.fs.UnixFileSystemProvider::readAttributes (63 bytes)
+Event: 7.201 Thread 0x00007f9f1c01d000 nmethod 1369 0x00000001184ea990 code [0x00000001184eab80, 0x00000001184eb258]
+Event: 7.201 Thread 0x00007f9f1c01d000 1370       3       sun.nio.fs.UnixFileSystemProvider::getFileAttributeView (71 bytes)
+Event: 7.202 Thread 0x00007f9f1c01d000 nmethod 1370 0x00000001184eb510 code [0x00000001184eb7a0, 0x00000001184ec4a8]
+Event: 7.212 Thread 0x00007f9f1d806000 nmethod 1368% 0x00000001184f00d0 code [0x00000001184f0240, 0x00000001184f09b8]
+Event: 7.213 Thread 0x00007f9f1c021800 1375 %     4       sun.nio.cs.UTF_8$Encoder::encodeArrayLoop @ 73 (489 bytes)
+Event: 7.213 Thread 0x00007f9f1b82a000 1376 %     4       sun.nio.fs.UnixPath::normalizeAndCheck @ 9 (75 bytes)
+Event: 7.214 Thread 0x00007f9f1d806000 1377 %     4       sun.nio.fs.MacOSXFileSystem::normalizeNativePath @ 8 (42 bytes)
+
+GC Heap History (10 events):
+Event: 3.864 GC heap before
+{Heap before GC invocations=9 (full 1):
+ PSYoungGen      total 224768K, used 215264K [0x000000076ab00000, 0x0000000780b80000, 0x00000007c0000000)
+  eden space 214528K, 100% used [0x000000076ab00000,0x0000000777c80000,0x0000000777c80000)
+  from space 10240K, 7% used [0x0000000777c80000,0x0000000777d38000,0x0000000778680000)
+  to   space 10240K, 0% used [0x0000000780180000,0x0000000780180000,0x0000000780b80000)
+ ParOldGen       total 93184K, used 6392K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 6% used [0x00000006c0000000,0x00000006c063e360,0x00000006c5b00000)
+ Metaspace       used 24959K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3432K, capacity 3552K, committed 3584K, reserved 1048576K
+Event: 3.866 GC heap after
+Heap after GC invocations=9 (full 1):
+ PSYoungGen      total 337408K, used 784K [0x000000076ab00000, 0x0000000780500000, 0x00000007c0000000)
+  eden space 333824K, 0% used [0x000000076ab00000,0x000000076ab00000,0x000000077f100000)
+  from space 3584K, 21% used [0x0000000780180000,0x0000000780244010,0x0000000780500000)
+  to   space 10240K, 0% used [0x000000077f100000,0x000000077f100000,0x000000077fb00000)
+ ParOldGen       total 93184K, used 6392K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 6% used [0x00000006c0000000,0x00000006c063e360,0x00000006c5b00000)
+ Metaspace       used 24959K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3432K, capacity 3552K, committed 3584K, reserved 1048576K
+}
+Event: 4.502 GC heap before
+{Heap before GC invocations=10 (full 1):
+ PSYoungGen      total 337408K, used 334608K [0x000000076ab00000, 0x0000000780500000, 0x00000007c0000000)
+  eden space 333824K, 100% used [0x000000076ab00000,0x000000077f100000,0x000000077f100000)
+  from space 3584K, 21% used [0x0000000780180000,0x0000000780244010,0x0000000780500000)
+  to   space 10240K, 0% used [0x000000077f100000,0x000000077f100000,0x000000077fb00000)
+ ParOldGen       total 93184K, used 6392K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 6% used [0x00000006c0000000,0x00000006c063e360,0x00000006c5b00000)
+ Metaspace       used 24971K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3432K, capacity 3552K, committed 3584K, reserved 1048576K
+Event: 4.505 GC heap after
+Heap after GC invocations=10 (full 1):
+ PSYoungGen      total 344064K, used 256K [0x000000076ab00000, 0x0000000786a80000, 0x00000007c0000000)
+  eden space 333824K, 0% used [0x000000076ab00000,0x000000076ab00000,0x000000077f100000)
+  from space 10240K, 2% used [0x000000077f100000,0x000000077f140000,0x000000077fb00000)
+  to   space 10240K, 0% used [0x0000000786080000,0x0000000786080000,0x0000000786a80000)
+ ParOldGen       total 93184K, used 7052K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06e3380,0x00000006c5b00000)
+ Metaspace       used 24971K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3432K, capacity 3552K, committed 3584K, reserved 1048576K
+}
+Event: 4.998 GC heap before
+{Heap before GC invocations=11 (full 1):
+ PSYoungGen      total 344064K, used 334080K [0x000000076ab00000, 0x0000000786a80000, 0x00000007c0000000)
+  eden space 333824K, 100% used [0x000000076ab00000,0x000000077f100000,0x000000077f100000)
+  from space 10240K, 2% used [0x000000077f100000,0x000000077f140000,0x000000077fb00000)
+  to   space 10240K, 0% used [0x0000000786080000,0x0000000786080000,0x0000000786a80000)
+ ParOldGen       total 93184K, used 7052K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06e3380,0x00000006c5b00000)
+ Metaspace       used 25002K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3433K, capacity 3552K, committed 3584K, reserved 1048576K
+Event: 4.999 GC heap after
+Heap after GC invocations=11 (full 1):
+ PSYoungGen      total 427520K, used 288K [0x000000076ab00000, 0x0000000786100000, 0x00000007c0000000)
+  eden space 427008K, 0% used [0x000000076ab00000,0x000000076ab00000,0x0000000784c00000)
+  from space 512K, 56% used [0x0000000786080000,0x00000007860c8000,0x0000000786100000)
+  to   space 9728K, 0% used [0x0000000784e00000,0x0000000784e00000,0x0000000785780000)
+ ParOldGen       total 93184K, used 7084K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06eb380,0x00000006c5b00000)
+ Metaspace       used 25002K, capacity 25640K, committed 25856K, reserved 1071104K
+  class space    used 3433K, capacity 3552K, committed 3584K, reserved 1048576K
+}
+Event: 5.818 GC heap before
+{Heap before GC invocations=12 (full 1):
+ PSYoungGen      total 427520K, used 427296K [0x000000076ab00000, 0x0000000786100000, 0x00000007c0000000)
+  eden space 427008K, 100% used [0x000000076ab00000,0x0000000784c00000,0x0000000784c00000)
+  from space 512K, 56% used [0x0000000786080000,0x00000007860c8000,0x0000000786100000)
+  to   space 9728K, 0% used [0x0000000784e00000,0x0000000784e00000,0x0000000785780000)
+ ParOldGen       total 93184K, used 7084K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06eb380,0x00000006c5b00000)
+ Metaspace       used 25075K, capacity 25704K, committed 25856K, reserved 1071104K
+  class space    used 3437K, capacity 3552K, committed 3584K, reserved 1048576K
+Event: 5.820 GC heap after
+Heap after GC invocations=12 (full 1):
+ PSYoungGen      total 438784K, used 256K [0x000000076ab00000, 0x000000078c800000, 0x00000007c0000000)
+  eden space 429056K, 0% used [0x000000076ab00000,0x000000076ab00000,0x0000000784e00000)
+  from space 9728K, 2% used [0x0000000784e00000,0x0000000784e40000,0x0000000785780000)
+  to   space 9728K, 0% used [0x000000078be80000,0x000000078be80000,0x000000078c800000)
+ ParOldGen       total 93184K, used 7084K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06eb380,0x00000006c5b00000)
+ Metaspace       used 25075K, capacity 25704K, committed 25856K, reserved 1071104K
+  class space    used 3437K, capacity 3552K, committed 3584K, reserved 1048576K
+}
+Event: 6.860 GC heap before
+{Heap before GC invocations=13 (full 1):
+ PSYoungGen      total 438784K, used 429312K [0x000000076ab00000, 0x000000078c800000, 0x00000007c0000000)
+  eden space 429056K, 100% used [0x000000076ab00000,0x0000000784e00000,0x0000000784e00000)
+  from space 9728K, 2% used [0x0000000784e00000,0x0000000784e40000,0x0000000785780000)
+  to   space 9728K, 0% used [0x000000078be80000,0x000000078be80000,0x000000078c800000)
+ ParOldGen       total 93184K, used 7084K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06eb380,0x00000006c5b00000)
+ Metaspace       used 25176K, capacity 25780K, committed 26112K, reserved 1071104K
+  class space    used 3446K, capacity 3554K, committed 3584K, reserved 1048576K
+Event: 6.862 GC heap after
+Heap after GC invocations=13 (full 1):
+ PSYoungGen      total 523776K, used 256K [0x000000076ab00000, 0x000000078bf00000, 0x00000007c0000000)
+  eden space 523264K, 0% used [0x000000076ab00000,0x000000076ab00000,0x000000078aa00000)
+  from space 512K, 50% used [0x000000078be80000,0x000000078bec0000,0x000000078bf00000)
+  to   space 9216K, 0% used [0x000000078ad00000,0x000000078ad00000,0x000000078b600000)
+ ParOldGen       total 93184K, used 7092K [0x00000006c0000000, 0x00000006c5b00000, 0x000000076ab00000)
+  object space 93184K, 7% used [0x00000006c0000000,0x00000006c06ed380,0x00000006c5b00000)
+ Metaspace       used 25176K, capacity 25780K, committed 26112K, reserved 1071104K
+  class space    used 3446K, capacity 3554K, committed 3584K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 1.608 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000001182db0e8 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 181
+Event: 1.700 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000001182ad95c method=java.util.Properties.loadConvert([CII[C)Ljava/lang/String; @ 4
+Event: 1.967 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000118381c18 method=sun.misc.URLClassPath.findResource(Ljava/lang/String;Z)Ljava/net/URL; @ 33
+Event: 1.989 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x000000011820470c method=java.lang.String.lastIndexOf([CII[CIII)I @ 118
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000118375738 method=sun.misc.URLClassPath$1.next()Z @ 56
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000001183a3710 method=java.net.URLClassLoader$3$1.run()Ljava/net/URL; @ 12
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x000000011838b160 method=java.net.URLClassLoader$3.next()Z @ 32
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x0000000118391b68 method=sun.misc.CompoundEnumeration.next()Z @ 38
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000001183a1950 method=java.net.URLClassLoader$3.next()Z @ 4
+Event: 2.109 Thread 0x00007f9f1980c800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x000000011836f770 method=sun.misc.CompoundEnumeration.next()Z @ 38
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 1.531 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$$plus$plus$1(Lscala/collection/immutable/Map;Lscala/Tuple2;)Lscala/collection/immutable/Map;> (0x000000076e414450) thrown at [/Users/java_re/workspace/8-2-build-macosx-x86_64/jdk8u202/1
+Event: 1.547 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$foldLeft$1$adapted(Lscala/runtime/ObjectRef;Lscala/Function2;Ljava/lang/Object;)Ljava/lang/Object;> (0x000000076e464228) thrown at [/Users/java_re/workspace/8-2-build-macosx-x86_64/jdk8
+Event: 1.582 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$indexOf$1$adapted(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;> (0x000000076e5c4d80) thrown at [/Users/java_re/workspace/8-2-build-macosx-x86_64/jdk8u202/12323/hotspot/src/sh
+Event: 1.599 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$toMap$1(Lscala/collection/mutable/Builder;Lscala/Predef$$less$colon$less;Ljava/lang/Object;)Lscala/collection/mutable/Builder;> (0x000000076e64ee40) thrown at [/Users/java_re/workspace/
+Event: 1.631 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$run$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lscala/Option;Lorg/scalatest/Args;)Lorg/scalatest/Status;> (0x000000076e84a218) thrown at [/Users/java_re/workspace/8-2-build-macosx-x86_64
+Event: 1.645 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$runTests$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Ljava/lang/String;Lorg/scalatest/Args;)Lorg/scalatest/Status;> (0x000000076e931420) thrown at [/Users/java_re/workspace/8-2-build-maco
+Event: 1.657 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$$times$1$adapted(Lscala/collection/immutable/StringLike;Lscala/collection/mutable/StringBuilder;Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;> (0x000000076ea03ee8) thrown 
+Event: 1.661 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$runTest$1(Lorg/scalatest/flatspec/AnyFlatSpecLike;Lorg/scalatest/Args;Ljava/lang/String;Lorg/scalatest/SuperEngine$TestLeaf;)Lorg/scalatest/Outcome;> (0x000000076ea230c8) thrown at [/Us
+Event: 1.687 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$reverse$1$adapted(Lscala/runtime/ObjectRef;Ljava/lang/Object;)Ljava/lang/Object;> (0x000000076ab09028) thrown at [/Users/java_re/workspace/8-2-build-macosx-x86_64/jdk8u202/12323/hotspot
+Event: 7.215 Thread 0x00007f9f1980c800 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.$anonfun$addString$1(Lscala/runtime/BooleanRef;Lscala/collection/mutable/StringBuilder;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;> (0x0000000776893868) thrown at [/Users/java_re/wor
+
+Events (10 events):
+Event: 7.213 Thread 0x00007f9f1980c800 DEOPT PACKING pc=0x000000011849d2dc sp=0x0000700002f06bc0
+Event: 7.213 Thread 0x00007f9f1980c800 DEOPT UNPACKING pc=0x0000000117f99784 sp=0x0000700002f06e00 mode 1
+Event: 7.215 loading class scala/runtime/BooleanRef
+Event: 7.215 loading class scala/runtime/BooleanRef done
+Event: 7.215 Thread 0x00007f9f1980c800 DEOPT PACKING pc=0x0000000118243934 sp=0x0000700002f06730
+Event: 7.215 Thread 0x00007f9f1980c800 DEOPT UNPACKING pc=0x0000000117f99784 sp=0x0000700002f064d0 mode 1
+Event: 7.215 loading class scala/runtime/BooleanRef
+Event: 7.215 loading class scala/runtime/BooleanRef done
+Event: 7.216 loading class org/scanet/core/NativeArray$
+Event: 7.216 loading class org/scanet/core/NativeArray$ done
+
+
+Dynamic libraries:
+0x00007fff845c2000 	/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa
+0x00007fff8ae6d000 	/System/Library/Frameworks/Security.framework/Versions/A/Security
+0x00007fff83479000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices
+0x00007fff9a2e9000 	/usr/lib/libz.1.dylib
+0x00007fff98de8000 	/usr/lib/libSystem.B.dylib
+0x00007fff99a96000 	/usr/lib/libobjc.A.dylib
+0x00007fff84b58000 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+0x00007fff865d3000 	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+0x00007fff8268e000 	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+0x00007fff847ae000 	/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData
+0x00007fff9586b000 	/System/Library/PrivateFrameworks/RemoteViewServices.framework/Versions/A/RemoteViewServices
+0x00007fff97857000 	/System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation
+0x00007fff90bf6000 	/System/Library/PrivateFrameworks/DFRFoundation.framework/Versions/A/DFRFoundation
+0x00007fff993d9000 	/usr/lib/libenergytrace.dylib
+0x00007fff96698000 	/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
+0x00007fff84ff5000 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+0x00007fff98de3000 	/usr/lib/libScreenReader.dylib
+0x00007fff816b0000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate
+0x00007fff86bd3000 	/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface
+0x00007fff8399d000 	/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox
+0x00007fff83baa000 	/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit
+0x00007fff90c3b000 	/System/Library/PrivateFrameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore
+0x00007fff90d2c000 	/System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv
+0x00007fff8410f000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
+0x00007fff994e2000 	/usr/lib/libicucore.A.dylib
+0x00007fff8a702000 	/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore
+0x00007fff844db000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition
+0x00007fff98f01000 	/usr/lib/libauto.dylib
+0x00007fff9a1cf000 	/usr/lib/libxml2.2.dylib
+0x00007fff908b0000 	/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/CoreUI
+0x00007fff8470c000 	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+0x00007fff8643c000 	/System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration
+0x00007fff9970d000 	/usr/lib/liblangid.dylib
+0x00007fff94751000 	/System/Library/PrivateFrameworks/MultitouchSupport.framework/Versions/A/MultitouchSupport
+0x00007fff86b3c000 	/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+0x00007fff98ba9000 	/usr/lib/libDiagnosticMessagesClient.dylib
+0x00007fff85a20000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices
+0x00007fff9510f000 	/System/Library/PrivateFrameworks/PerformanceAnalysis.framework/Versions/A/PerformanceAnalysis
+0x00007fff92b7e000 	/System/Library/PrivateFrameworks/GenerationalStorage.framework/Versions/A/GenerationalStorage
+0x00007fff89ba2000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL
+0x00007fff85678000 	/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage
+0x00007fff86149000 	/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText
+0x00007fff86c2c000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO
+0x00007fff8e46d000 	/System/Library/PrivateFrameworks/Backup.framework/Versions/A/Backup
+0x00007fff98e55000 	/usr/lib/libarchive.2.dylib
+0x00007fff83d13000 	/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork
+0x00007fff8b59a000 	/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration
+0x00007fff98af0000 	/usr/lib/libCRFSuite.dylib
+0x00007fff98f22000 	/usr/lib/libc++.1.dylib
+0x00007fff98f79000 	/usr/lib/libc++abi.dylib
+0x00007fff9a309000 	/usr/lib/system/libcache.dylib
+0x00007fff9a30e000 	/usr/lib/system/libcommonCrypto.dylib
+0x00007fff9a319000 	/usr/lib/system/libcompiler_rt.dylib
+0x00007fff9a321000 	/usr/lib/system/libcopyfile.dylib
+0x00007fff9a32a000 	/usr/lib/system/libcorecrypto.dylib
+0x00007fff9a3ae000 	/usr/lib/system/libdispatch.dylib
+0x00007fff9a3e0000 	/usr/lib/system/libdyld.dylib
+0x00007fff9a3e6000 	/usr/lib/system/libkeymgr.dylib
+0x00007fff9a3f4000 	/usr/lib/system/liblaunch.dylib
+0x00007fff9a3f5000 	/usr/lib/system/libmacho.dylib
+0x00007fff9a3fb000 	/usr/lib/system/libquarantine.dylib
+0x00007fff9a3fe000 	/usr/lib/system/libremovefile.dylib
+0x00007fff9a400000 	/usr/lib/system/libsystem_asl.dylib
+0x00007fff9a419000 	/usr/lib/system/libsystem_blocks.dylib
+0x00007fff9a41a000 	/usr/lib/system/libsystem_c.dylib
+0x00007fff9a4a8000 	/usr/lib/system/libsystem_configuration.dylib
+0x00007fff9a4ac000 	/usr/lib/system/libsystem_coreservices.dylib
+0x00007fff9a4b0000 	/usr/lib/system/libsystem_coretls.dylib
+0x00007fff9a4c9000 	/usr/lib/system/libsystem_dnssd.dylib
+0x00007fff9a4d0000 	/usr/lib/system/libsystem_info.dylib
+0x00007fff9a4fa000 	/usr/lib/system/libsystem_kernel.dylib
+0x00007fff9a51d000 	/usr/lib/system/libsystem_m.dylib
+0x00007fff9a565000 	/usr/lib/system/libsystem_malloc.dylib
+0x00007fff9a584000 	/usr/lib/system/libsystem_network.dylib
+0x00007fff9a5de000 	/usr/lib/system/libsystem_networkextension.dylib
+0x00007fff9a5e8000 	/usr/lib/system/libsystem_notify.dylib
+0x00007fff9a5f2000 	/usr/lib/system/libsystem_platform.dylib
+0x00007fff9a5fb000 	/usr/lib/system/libsystem_pthread.dylib
+0x00007fff9a606000 	/usr/lib/system/libsystem_sandbox.dylib
+0x00007fff9a60a000 	/usr/lib/system/libsystem_secinit.dylib
+0x00007fff9a60c000 	/usr/lib/system/libsystem_symptoms.dylib
+0x00007fff9a614000 	/usr/lib/system/libsystem_trace.dylib
+0x00007fff9a628000 	/usr/lib/system/libunwind.dylib
+0x00007fff9a62e000 	/usr/lib/system/libxpc.dylib
+0x00007fff98f02000 	/usr/lib/libbsm.0.dylib
+0x00007fff9a3e7000 	/usr/lib/system/libkxld.dylib
+0x00007fff98fcb000 	/usr/lib/libcoretls.dylib
+0x00007fff98fcc000 	/usr/lib/libcoretls_cfhelpers.dylib
+0x00007fff98de2000 	/usr/lib/libOpenScriptingUtil.dylib
+0x00007fff99e6b000 	/usr/lib/libpam.2.dylib
+0x00007fff99f2a000 	/usr/lib/libsqlite3.dylib
+0x00007fff9a1c1000 	/usr/lib/libxar.1.dylib
+0x00007fff98f13000 	/usr/lib/libbz2.1.0.dylib
+0x00007fff9970f000 	/usr/lib/liblzma.5.dylib
+0x00007fff99a1b000 	/usr/lib/libnetwork.dylib
+0x00007fff99e70000 	/usr/lib/libpcap.A.dylib
+0x00007fff85d83000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/FSEvents
+0x00007fff85a73000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore
+0x00007fff85ef9000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata
+0x00007fff85faa000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices
+0x00007fff8600a000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit
+0x00007fff85a21000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE
+0x00007fff85d8c000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices
+0x00007fff85d4f000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/DictionaryServices.framework/Versions/A/DictionaryServices
+0x00007fff8607b000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SharedFileList.framework/Versions/A/SharedFileList
+0x00007fff88dc6000 	/System/Library/Frameworks/NetFS.framework/Versions/A/NetFS
+0x00007fff9482b000 	/System/Library/PrivateFrameworks/NetAuth.framework/Versions/A/NetAuth
+0x00007fff98a99000 	/System/Library/PrivateFrameworks/login.framework/Versions/A/Frameworks/loginsupport.framework/Versions/A/loginsupport
+0x00007fff97689000 	/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC
+0x00007fff99740000 	/usr/lib/libmecabra.dylib
+0x00007fff8347a000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS
+0x00007fff837fa000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSync.framework/Versions/A/ColorSync
+0x00007fff838a5000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices
+0x00007fff838f7000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LangAnalysis.framework/Versions/A/LangAnalysis
+0x00007fff83907000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore
+0x00007fff83955000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD
+0x00007fff83991000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis
+0x00007fff816c9000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage
+0x00007fff823cf000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib
+0x00007fff82194000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib
+0x00007fff81d55000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBNNS.dylib
+0x00007fff82178000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib
+0x00007fff8231c000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib
+0x00007fff81d6a000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+0x00007fff81be3000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+0x00007fff82161000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib
+0x00007fff8217f000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparseBLAS.dylib
+0x00007fff83582000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontParser.dylib
+0x00007fff836b2000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib
+0x00007fff86e83000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib
+0x00007fff86ed2000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib
+0x00007fff86ea7000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib
+0x00007fff86d8d000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib
+0x00007fff86d92000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib
+0x00007fff86ecf000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib
+0x00007fff98fb4000 	/usr/lib/libcompression.dylib
+0x00007fff8dfaf000 	/System/Library/PrivateFrameworks/AppleJPEG.framework/Versions/A/AppleJPEG
+0x00007fff99309000 	/usr/lib/libcups.2.dylib
+0x00007fff87c89000 	/System/Library/Frameworks/Kerberos.framework/Versions/A/Kerberos
+0x00007fff869a7000 	/System/Library/Frameworks/GSS.framework/Versions/A/GSS
+0x00007fff99ebe000 	/usr/lib/libresolv.9.dylib
+0x00007fff993ef000 	/usr/lib/libiconv.2.dylib
+0x00007fff932ab000 	/System/Library/PrivateFrameworks/Heimdal.framework/Versions/A/Heimdal
+0x00007fff993e9000 	/usr/lib/libheimdal-asn1.dylib
+0x00007fff89017000 	/System/Library/Frameworks/OpenDirectory.framework/Versions/A/OpenDirectory
+0x00007fff8fac2000 	/System/Library/PrivateFrameworks/CommonAuth.framework/Versions/A/CommonAuth
+0x00007fff88ffd000 	/System/Library/Frameworks/OpenDirectory.framework/Versions/A/Frameworks/CFOpenDirectory.framework/Versions/A/CFOpenDirectory
+0x00007fff8b170000 	/System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation
+0x00007fff93a63000 	/System/Library/PrivateFrameworks/LanguageModeling.framework/Versions/A/LanguageModeling
+0x00007fff99729000 	/usr/lib/libmarisa.dylib
+0x00007fff98b0c000 	/usr/lib/libChineseTokenizer.dylib
+0x00007fff98fa3000 	/usr/lib/libcmph.dylib
+0x00007fff90214000 	/System/Library/PrivateFrameworks/CoreEmoji.framework/Versions/A/CoreEmoji
+0x00007fff8b210000 	/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement
+0x00007fff9a2bf000 	/usr/lib/libxslt.1.dylib
+0x00007fff84423000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Ink.framework/Versions/A/Ink
+0x00007fff9771b000 	/System/Library/PrivateFrameworks/TextureIO.framework/Versions/A/TextureIO
+0x00007fff88482000 	/System/Library/Frameworks/Metal.framework/Versions/A/Metal
+0x00007fff98e81000 	/usr/lib/libate.dylib
+0x00007fff928ad000 	/System/Library/PrivateFrameworks/GPUCompiler.framework/libmetal_timestamp.dylib
+0x00007fff89026000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreFSCache.dylib
+0x00007fff9393c000 	/System/Library/PrivateFrameworks/IOAccelerator.framework/Versions/A/IOAccelerator
+0x00007fff86297000 	/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo
+0x00007fff98bab000 	/usr/lib/libFosl_dynamic.dylib
+0x00007fff9453b000 	/System/Library/PrivateFrameworks/MetalPerformanceShaders.framework/Versions/A/MetalPerformanceShaders
+0x00007fff91125000 	/System/Library/PrivateFrameworks/FaceCore.framework/Versions/A/FaceCore
+0x00007fff88fae000 	/System/Library/Frameworks/OpenCL.framework/Versions/A/OpenCL
+0x00007fff891f9000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib
+0x00007fff8902f000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib
+0x00007fff89039000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+0x00007fff89045000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib
+0x00007fff89023000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib
+0x00007fff8902a000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib
+0x00007fff90b76000 	/System/Library/PrivateFrameworks/CrashReporterSupport.framework/Versions/A/CrashReporterSupport
+0x00007fff965ea000 	/System/Library/PrivateFrameworks/Sharing.framework/Versions/A/Sharing
+0x00007fff9395a000 	/System/Library/PrivateFrameworks/IconServices.framework/Versions/A/IconServices
+0x00007fff95838000 	/System/Library/PrivateFrameworks/ProtocolBuffer.framework/Versions/A/ProtocolBuffer
+0x00007fff8de8c000 	/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Apple80211
+0x00007fff862cd000 	/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN
+0x00007fff909f0000 	/System/Library/PrivateFrameworks/CoreUtils.framework/Versions/A/CoreUtils
+0x00007fff86a98000 	/System/Library/Frameworks/IOBluetooth.framework/Versions/A/IOBluetooth
+0x00007fff90b10000 	/System/Library/PrivateFrameworks/CoreWiFi.framework/Versions/A/CoreWiFi
+0x00007fff8479a000 	/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth
+0x00007fff84aaa000 	/System/Library/Frameworks/CoreDisplay.framework/Versions/A/CoreDisplay
+0x00007fff93945000 	/System/Library/PrivateFrameworks/IOPresentment.framework/Versions/A/IOPresentment
+0x00007fff90c01000 	/System/Library/PrivateFrameworks/DSExternalDisplay.framework/Versions/A/DSExternalDisplay
+0x00007fff90cec000 	/System/Library/PrivateFrameworks/DebugSymbols.framework/Versions/A/DebugSymbols
+0x00007fff90820000 	/System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication
+0x00007fff971d6000 	/System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication
+0x00007fff8deaf000 	/System/Library/PrivateFrameworks/AppleFSCompression.framework/Versions/A/AppleFSCompression
+0x00007fff96ade000 	/System/Library/PrivateFrameworks/SpeechRecognitionCore.framework/Versions/A/SpeechRecognitionCore
+0x00007fff8f176000 	/System/Library/PrivateFrameworks/ChunkingLibrary.framework/Versions/A/ChunkingLibrary
+0x000000010e200000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/server/libjvm.dylib
+0x00007fff9a128000 	/usr/lib/libstdc++.6.dylib
+0x000000010d04d000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libverify.dylib
+0x000000010d05b000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libjava.dylib
+0x000000010d092000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libjdwp.dylib
+0x000000010d0dd000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libnpt.dylib
+0x000000010d0e1000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libinstrument.dylib
+0x000000010d13f000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libzip.dylib
+0x0000000114a96000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libdt_socket.dylib
+0x0000000115c0c000 	/Users/pavlo/.javacpp/cache/mkl-dnn-0.21.2-1.5.2-macosx-x86_64.jar/org/bytedeco/mkldnn/macosx-x86_64/libiomp5.dylib
+0x000000011517c000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/libnio.dylib
+0x000000011518c000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/./libnet.dylib
+0x000000012ef52000 	/Users/pavlo/.javacpp/cache/mkl-dnn-0.21.2-1.5.2-macosx-x86_64.jar/org/bytedeco/mkldnn/macosx-x86_64/libmklml.dylib
+0x000000013458f000 	/Users/pavlo/.javacpp/cache/tensorflow-1.15.0-1.5.2-macosx-x86_64.jar/org/bytedeco/tensorflow/macosx-x86_64/libtensorflow_cc.so.1
+0x0000000115db5000 	/Users/pavlo/.javacpp/cache/tensorflow-1.15.0-1.5.2-macosx-x86_64.jar/org/bytedeco/tensorflow/macosx-x86_64/libjnitensorflow.dylib
+0x0000000114f22000 	/System/Library/Frameworks/JavaVM.framework/Versions/A/JavaVM
+0x0000000114f2f000 	/System/Library/PrivateFrameworks/JavaLaunching.framework/Versions/A/JavaLaunching
+
+VM Arguments:
+jvm_args: -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:63220,suspend=y,server=n -javaagent:/Users/pavlo/Library/Caches/IdeaIC2019.2/captureAgent/debugger-agent.jar -Dfile.encoding=UTF-8 
+java_command: org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestRunner -s org.scanet.linalg.OpTest -testName op example should work -C org.jetbrains.plugins.scala.testingSupport.scalaTest.ScalaTestReporter -showProgressMessages true
+java_class_path (initial): /Users/pavlo/Library/Application Support/IdeaIC2019.2/Scala/lib/runners.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/deploy.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/cldrdata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/jaccess.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/jfxrt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/nashorn.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/javaws.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/jfxswt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/plugin.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/lib/ant
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+PATH=/Users/pavlo/bin:/usr/local/anaconda3/bin:/usr/local/anaconda3/condabin:/Users/pavlo/Projects/zebra/gloud/google-cloud-sdk/bin:/Users/pavlo/Library/Python/3.6/bin:/usr/local/opt/mysql-client/bin:/usr/local/apps/apache-hive-3.1.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+SHELL=/bin/zsh
+DISPLAY=/private/tmp/com.apple.launchd.RuzaRq7dcB/org.macosforge.xquartz:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.dylib+0x5b719d], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_ONSTACK|SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.dylib+0x5b719d], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.dylib+0x48c8fc], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.dylib+0x48c8fc], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.dylib+0x48c8fc], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.dylib+0x48c8fc], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.dylib+0x48c41a], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.dylib+0x48a9a5], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.dylib+0x48a9a5], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.dylib+0x48a9a5], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.dylib+0x48a9a5], sa_mask[0]=11111111011111110111111111111111, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Bsduname:Darwin 16.7.0 Darwin Kernel Version 16.7.0: Sun Jun  2 20:26:31 PDT 2019; root:xnu-3789.73.50~1/RELEASE_X86_64 x86_64
+rlimit: STACK 8192k, CORE 0k, NPROC 709, NOFILE 10240, AS infinity
+load average:2.72 3.49 3.95
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 94 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, rtm, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 16777216k(56640k free)
+
+/proc/meminfo:
+
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.202-b08) for bsd-amd64 JRE (1.8.0_202-b08), built on Dec 15 2018 20:16:16 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+
+time: Sun Mar 15 17:49:50 2020
+timezone: EET
+elapsed time: 7 seconds (0d 0h 0m 7s)
+
