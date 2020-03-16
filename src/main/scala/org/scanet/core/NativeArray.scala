@@ -39,8 +39,8 @@ class NativeArray[A: ClassTag](val pointer: Pointer) {
       }
   }
 
-  def asBuffer[B: ClassTag]: Buffer[B] = {
-    Buffer[B](to[B].pointer.asBuffer())
+  def asBuffer: Buffer[A] = {
+    Buffer[A](pointer.asBuffer())
   }
 
   def position: Long = pointer.position()

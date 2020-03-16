@@ -17,7 +17,7 @@ class PointerArrayTest extends AnyFlatSpec {
   }
 
   "long pointer" should "be converted into int buffer" in {
-    val a = NativeArray(1L, 2L, 3L).asBuffer[Int]
+    val a = NativeArray(1L, 2L, 3L).to[Int].asBuffer
     println(a.capacity)
     println(a.get(0))
     println(a.get(1))

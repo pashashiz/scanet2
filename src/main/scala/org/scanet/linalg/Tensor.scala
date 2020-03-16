@@ -24,7 +24,7 @@ class Tensor[A: ClassTag](val native: NativeTensor) {
 
   val buffer: Buffer[A] = {
     def data: NativeArray[Byte] = native.tensor_data()
-    data.asBuffer[A]
+    data.to[A].asBuffer
   }
 
   def toScalar: A = buffer.get(0)
