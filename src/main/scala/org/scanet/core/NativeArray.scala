@@ -6,7 +6,7 @@ import org.scanet.core.TypeTags.{ByteTag, DoubleTag, FloatTag, IntTag, LongTag, 
 import scala.reflect.{ClassTag, classTag}
 import scala.language.implicitConversions
 
-class NativeArray[A: ClassTag](val pointer: Pointer) {
+class NativeArray[A: ClassTag](val pointer: Pointer) extends AutoCloseable {
 
   def asFloat: FloatPointer = pointer.asInstanceOf[FloatPointer]
   def asDouble: DoublePointer = pointer.asInstanceOf[DoublePointer]
@@ -43,28 +43,39 @@ class NativeArray[A: ClassTag](val pointer: Pointer) {
     Buffer[A](pointer.asBuffer())
   }
 
-  def position: Long = pointer.position()
+  def position: Int = pointer.position().toInt
 
-  def position(position: Long): NativeArray[A] = {pointer.position(position); this;}
+  def position(position: Int): NativeArray[A] = {
+    require(position >= 0 && position <= limit, s"position $position should be in a range [0, $limit]")
+    pointer.position(position)
+    this
+  }
 
-  def limit: Long = pointer.limit()
+  def limit: Int = pointer.limit().toInt
 
-  def limit(limit: Long): NativeArray[A] = {pointer.limit(limit); this;}
+  def limit(limit: Int): NativeArray[A] = {
+    require(limit >= position && limit <= capacity, s"limit $limit should be in a range [$position, $capacity)")
+    pointer.limit(limit)
+    this
+  }
 
-  def capacity(capacity: Long): NativeArray[A] = {pointer.capacity(capacity); this;}
+  def capacity: Int = pointer.capacity().toInt
 
-  def capacity: Long = pointer.capacity()
+  def size: Int = limit - position
 
   def get: A = get(0)
 
-  def get(i: Int): A = classTag[A] match {
-    case FloatTag => asFloat.get(i).asInstanceOf[A]
-    case DoubleTag => asDouble.get(i).asInstanceOf[A]
-    case LongTag => asLong.get(i).asInstanceOf[A]
-    case IntTag => asInt.get(i).asInstanceOf[A]
-    case ShortTag => asShort.get(i).asInstanceOf[A]
-    case ByteTag => asByte.get(i).asInstanceOf[A]
-    case _ => error(s"NativeArray[${classTag[A]}] is not supported")
+  def get(i: Int): A = {
+    require(i < size, s"index $i is out of bound: [0, $size]")
+    classTag[A] match {
+      case FloatTag => asFloat.get(i).asInstanceOf[A]
+      case DoubleTag => asDouble.get(i).asInstanceOf[A]
+      case LongTag => asLong.get(i).asInstanceOf[A]
+      case IntTag => asInt.get(i).asInstanceOf[A]
+      case ShortTag => asShort.get(i).asInstanceOf[A]
+      case ByteTag => asByte.get(i).asInstanceOf[A]
+      case _ => error(s"NativeArray[${classTag[A]}] is not supported")
+    }
   }
 
   def get(array: Array[A]): NativeArray[A] = get(array, 0, array.length)
@@ -79,30 +90,66 @@ class NativeArray[A: ClassTag](val pointer: Pointer) {
     case _ => error(s"NativeArray[${classTag[A]}] is not supported")
   }
 
+  def put(i: Int, v: A): NativeArray[A] = {
+    require(i < size, s"index $i is out of bound: [0, $size]")
+    classTag[A] match {
+      case FloatTag => asFloat.put(i.toLong, v.asInstanceOf[Float]); this;
+      case DoubleTag => asDouble.put(i.toLong, v.asInstanceOf[Double]); this;
+      case LongTag => asLong.put(i.toLong, v.asInstanceOf[Long]); this;
+      case IntTag => asInt.put(i.toLong, v.asInstanceOf[Int]); this;
+      case ShortTag => asShort.put(i.toLong, v.asInstanceOf[Short]); this;
+      case ByteTag => asByte.put(i.toLong, v.asInstanceOf[Byte]); this;
+      case _ => error(s"NativeArray[${classTag[A]}] is not supported")
+    }
+  }
+
   def putAll(array: Array[A]): NativeArray[A] = put(array, 0, array.length)
 
-  def put(v: A): NativeArray[A] = put(0, v)
-
-  def put(i: Int, v: A): NativeArray[A] = put(Array(v), i, 1)
-
-  def put(array: Array[A], offset: Int, length: Int): NativeArray[A] = classTag[A] match {
-    case FloatTag => asFloat.put(array.asInstanceOf[Array[Float]], offset, length); this;
-    case DoubleTag => asDouble.put(array.asInstanceOf[Array[Double]], offset, length); this;
-    case LongTag => asLong.put(array.asInstanceOf[Array[Long]], offset, length); this;
-    case IntTag => asInt.put(array.asInstanceOf[Array[Int]], offset, length); this;
-    case ShortTag => asShort.put(array.asInstanceOf[Array[Short]], offset, length); this;
-    case ByteTag => asByte.put(array.asInstanceOf[Array[Byte]], offset, length); this;
-    case _ => error(s"NativeArray[${classTag[A]}] is not supported")
+  def put(array: Array[A], offset: Int, length: Int): NativeArray[A] = {
+    val targetSize = length - offset
+    require(targetSize <= size, s"allowed array size is $size but tried to put $targetSize")
+    classTag[A] match {
+      case FloatTag => asFloat.put(array.asInstanceOf[Array[Float]], offset, length); this;
+      case DoubleTag => asDouble.put().put(array.asInstanceOf[Array[Double]], offset, length); this;
+      case LongTag => asLong.put(array.asInstanceOf[Array[Long]], offset, length); this;
+      case IntTag => asInt.put(array.asInstanceOf[Array[Int]], offset, length); this;
+      case ShortTag => asShort.put(array.asInstanceOf[Array[Short]], offset, length); this;
+      case ByteTag => asByte.put(array.asInstanceOf[Array[Byte]], offset, length); this;
+      case _ => error(s"NativeArray[${classTag[A]}] is not supported")
+    }
   }
 
   def toArray: Array[A] = {
-    val array = new Array[A](capacity.toInt)
+    val array = new Array[A](size)
     for (i <- array.indices) {
       array(i) = get(i)
     }
     array
   }
 
+  def toStream: Stream[A] = {
+    def next(index: Int): Stream[A] = {
+      if (capacity == index) Stream.empty
+      else get(index) #:: next(index + 1)
+    }
+    next(0)
+  }
+
+  override def close(): Unit = pointer.close()
+
+  override def hashCode(): Int = toArray.foldLeft(1)((acc, a) => 31 * acc + a.hashCode())
+
+  override def equals(obj: Any): Boolean = obj match {
+    case other: NativeArray[A] => other.toArray sameElements toArray
+    case _ => false
+  }
+
+  override def toString: String = s"NativeArray[${classTag[A]}](capacity=$capacity, position=$position, limit=$limit, address=${pointer.address()})" + show()
+
+  def show(n: Int = 20): String = {
+    val elements = toStream.take(n).mkString(", ")
+    "[" + elements + (if (n < limit) "..." else "") + "]"
+  }
 }
 
 object NativeArray {

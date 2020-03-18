@@ -9,5 +9,7 @@ class BufferTest extends AnyFlatSpec with Matchers {
     Buffer.wrap(Array(1, 2, 3)).get should be(1)
   }
 
-  // todo
+  "buffer" should "have toString" in {
+    println(Buffer.wrap(Array(1, 2, 3)))
+  }
 }

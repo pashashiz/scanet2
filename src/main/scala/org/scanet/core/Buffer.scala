@@ -6,6 +6,7 @@ import org.scanet.core.TypeTags._
 
 import scala.reflect.ClassTag
 import scala.reflect._
+import scala.language.implicitConversions
 
 class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buffer[A]] {
 
@@ -166,7 +167,7 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
       while (hasRemaining) {
         array(position) = get
       }
-      flip
+      rewind
       array
     }
   }

@@ -65,7 +65,7 @@ object Tensor {
   def apply[A: ClassTag](data: Buffer[A], shape: List[Long]): Tensor[A] = {
     val tensor = allocate[A](shape)
     tensor.buffer.put(data)
-    tensor.buffer.position(0)
+    tensor.buffer.rewind
     tensor
   }
 
