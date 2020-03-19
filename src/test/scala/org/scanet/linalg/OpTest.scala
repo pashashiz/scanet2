@@ -11,6 +11,6 @@ class OpTest extends AnyFlatSpec with Matchers {
     val expr = const("a", 5.0f)
     val session = new Session()
     val tensor: Tensor[Float] = session.run(expr)
-    println(tensor.show)
+    println(tensor.show())
   }
 }

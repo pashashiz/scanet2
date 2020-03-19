@@ -104,7 +104,7 @@ class NativeArrayTest extends AnyFlatSpec with CustomMatchers  {
   }
 
   "pointer" should "be converted into buffer" in {
-    NativeArray(1, 2, 3).asBuffer should
+    NativeArray(1, 2, 3).asBuffer.toString should
       be("Buffer[Int](capacity=3, position=0, limit=3, direct=true)[1, 2, 3]")
   }
 }

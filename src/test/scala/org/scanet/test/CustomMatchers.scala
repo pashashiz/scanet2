@@ -2,18 +2,18 @@ package org.scanet.test
 
 import org.scalatest.matchers.{MatchResult, Matcher}
 import org.scalatest.matchers.should.Matchers
-import org.scanet.linalg.Tensor
+import org.scanet.linalg.{Shape, Tensor}
 
 trait CustomMatchers extends Matchers {
 
-  def haveShape(shape: List[Long]): Matcher[Tensor[_]] =
+  def haveShape(shape: Shape): Matcher[Tensor[_]] =
     tensor => {
-      MatchResult(tensor.shape == shape, s"shape ${tensor.shape} was not equal to shape $shape", "", Vector(tensor, shape))
+      MatchResult(tensor.shape == shape, s"${tensor.shape} was not equal to $shape", "", Vector(tensor, shape))
     }
 
   def containData[A](data: Array[A]): Matcher[Tensor[A]] =
     tensor => {
       val existing = tensor.toArray
-      MatchResult(existing sameElements data, s"data ${existing} was not equal to data $data", "", Vector(existing, data))
+      MatchResult(existing sameElements data, s"data $existing was not equal to data $data", "", Vector(existing, data))
     }
 }
