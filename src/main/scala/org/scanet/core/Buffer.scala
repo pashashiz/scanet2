@@ -8,7 +8,7 @@ import scala.reflect.ClassTag
 import scala.reflect._
 import scala.language.implicitConversions
 
-class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buffer[A]] {
+class Buffer[A: ClassTag] private (val original: JavaBuffer) extends Comparable[Buffer[A]] {
 
   private def asFloat: FloatBuffer = original.asInstanceOf[FloatBuffer]
   private def asDouble: DoubleBuffer = original.asInstanceOf[DoubleBuffer]
@@ -159,7 +159,7 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
 
   def hasArray: Boolean = original.hasArray
 
-  def array: Array[A] = {
+  def toArray: Array[A] = {
     if (hasArray) {
       original.array().asInstanceOf[Array[A]]
     } else {
@@ -172,15 +172,31 @@ class Buffer[A: ClassTag] private (original: JavaBuffer) extends Comparable[Buff
     }
   }
 
+  def toStream: Stream[A] = {
+    def next(index: Int): Stream[A] = {
+      if (limit == index) Stream.empty
+      else get(index) #:: next(index + 1)
+    }
+    next(position)
+  }
+
   def arrayOffset: Int = original.arrayOffset()
 
   def isDirect: Boolean = original.isDirect
 
-  override def toString: String = original.toString
+  override def toString: String = s"Buffer[${classTag[A]}](capacity=$capacity, position=$position, limit=$limit, direct=$isDirect)" + show()
+
+  def show(n: Int = 20): String = {
+    val elements = toStream.take(n).mkString(", ")
+    "[" + elements + (if (n < limit) "..." else "") + "]"
+  }
 
   override def hashCode: Int = original.hashCode()
 
-  override def equals(ob: Any): Boolean = original.equals(ob)
+  override def equals(other: Any): Boolean = other match {
+    case other: Buffer[A] => original == other.original
+    case _ => false
+  }
 
   override def compareTo(that: Buffer[A]): Int = classTag[A] match {
     case FloatTag => asFloat.compareTo(that.asFloat)

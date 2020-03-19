@@ -29,7 +29,7 @@ class Tensor[A: ClassTag](val native: NativeTensor) {
 
   def toScalar: A = buffer.get(0)
 
-  def toArray: Array[A] = buffer.array
+  def toArray: Array[A] = buffer.toArray
 
   override def toString = s"Tensor[${classTag[A]}](shape=(${shape.mkString(", ")}), size=${buffer.limit})"
 

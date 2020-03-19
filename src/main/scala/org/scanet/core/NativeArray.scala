@@ -129,7 +129,7 @@ class NativeArray[A: ClassTag](val pointer: Pointer) extends AutoCloseable {
 
   def toStream: Stream[A] = {
     def next(index: Int): Stream[A] = {
-      if (capacity == index) Stream.empty
+      if (size == index) Stream.empty
       else get(index) #:: next(index + 1)
     }
     next(0)
