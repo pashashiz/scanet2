@@ -5,19 +5,22 @@ import org.scanet.test.CustomMatchers
 
 class TensorTest extends AnyFlatSpec with CustomMatchers {
 
-  "scalar tensor" should "be constructed" in {
-    Tensor.scalar(5) should (haveShape (Shape()) and containData (Array(5)))
+  "scalar tensor" should "be allocated" in {
+    Tensor.scalar(5) should
+      (haveShape (Shape()) and containData (Array(5)))
   }
 
-  "vector tensor" should "be constructed" in {
-    Tensor.vector(1, 2, 3) should (haveShape (Shape(3)) and containData (Array(1, 2, 3)))
+  "vector tensor" should "be allocated" in {
+    Tensor.vector(1, 2, 3) should
+      (haveShape (Shape(3)) and containData (Array(1, 2, 3)))
   }
 
-  "matrix tensor" should "be constructed" in {
-      println(Tensor.matrix(Array(1, 2, 3), Array(4, 5, 6)).show())
+  "matrix tensor" should "be allocated" in {
+      Tensor.matrix(Array(1, 2, 3), Array(4, 5, 6)) should
+        (haveShape (Shape(2, 3)) and containData (Array(1, 2, 3, 4, 5, 6)))
   }
 
-  "n-dim tensor" should "be constructed" in {
+  "n-dim tensor" should "be allocated" in {
     Tensor(Array(1, 2, 3, 4, 5, 6, 7, 8), Shape(2, 2, 2)) should
       (haveShape (Shape(2, 2, 2)) and containData (Array(1, 2, 3, 4, 5, 6, 7, 8)))
   }
@@ -26,4 +29,18 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
     an [IllegalArgumentException] should be thrownBy
       Tensor(Array(1, 2, 3, 4, 5, 6, 7, 8), Shape(2, 2, 1))
   }
+
+  "zeros tensor" should "be allocated" in {
+    Tensor.zeros[Int](2, 2) should be(Tensor.matrix(Array(0, 0), Array(0, 0)))
+  }
+
+  "tensor" should "be filled with a given number" in {
+    Tensor.fill(2, 2)(1) should be(Tensor.matrix(Array(1, 1), Array(1, 1)))
+  }
+
+  it should "be tabulated" in {
+     Tensor.tabulate[Int](2, 2)((i, j) => (i + 1) * (j + 1)) should
+       be(Tensor.matrix(Array(1, 2), Array(2, 4)))
+  }
+
 }

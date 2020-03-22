@@ -5,8 +5,9 @@ import org.scanet.core.TypeTags.{ByteTag, DoubleTag, FloatTag, IntTag, LongTag, 
 
 import scala.reflect.{ClassTag, classTag}
 import scala.language.implicitConversions
+import scala.{specialized => sp}
 
-class NativeArray[A: ClassTag](val pointer: Pointer) extends AutoCloseable {
+class NativeArray[@sp A: ClassTag](val pointer: Pointer) extends AutoCloseable {
 
   def asFloat: FloatPointer = pointer.asInstanceOf[FloatPointer]
   def asDouble: DoublePointer = pointer.asInstanceOf[DoublePointer]
@@ -15,7 +16,7 @@ class NativeArray[A: ClassTag](val pointer: Pointer) extends AutoCloseable {
   def asShort: ShortPointer = pointer.asInstanceOf[ShortPointer]
   def asByte: BytePointer = pointer.asInstanceOf[BytePointer]
 
-  def to[B: ClassTag]: NativeArray[B] = {
+  def to[@sp B: ClassTag]: NativeArray[B] = {
     val currentClass = classTag[A]
     val newClass = classTag[B]
       if (currentClass == newClass) {
@@ -156,7 +157,7 @@ object NativeArray {
 
   loadNative()
 
-  def apply[A: ClassTag](size: Int): NativeArray[A] = classTag[A] match {
+  def apply[@sp A: ClassTag](size: Int): NativeArray[A] = classTag[A] match {
     case FloatTag => new NativeArray[A](new FloatPointer(size.toLong))
     case DoubleTag => new NativeArray[A](new DoublePointer(size.toLong))
     case LongTag => new NativeArray[A](new LongPointer(size.toLong))
@@ -166,11 +167,11 @@ object NativeArray {
     case _ => error(s"NativeArray[${classTag[A]}] is not supported")
   }
 
-  def apply[A: ClassTag](array: A*): NativeArray[A] = {
+  def apply[@sp A: ClassTag](array: A*): NativeArray[A] = {
     NativeArray(array.length).putAll(array.toArray)
   }
 
-  def apply[A: ClassTag](array: Array[A]): NativeArray[A] = {
+  def apply[@sp A: ClassTag](array: Array[A]): NativeArray[A] = {
     NativeArray(array.length).putAll(array)
   }
 

@@ -7,8 +7,9 @@ import org.scanet.core.TypeTags._
 import scala.reflect.ClassTag
 import scala.reflect._
 import scala.language.implicitConversions
+import scala.{specialized => sp}
 
-class Buffer[A: ClassTag] private (val original: JavaBuffer) extends Comparable[Buffer[A]] {
+class Buffer[@sp A: ClassTag] (val original: JavaBuffer) extends Comparable[Buffer[A]] {
 
   private def asFloat: FloatBuffer = original.asInstanceOf[FloatBuffer]
   private def asDouble: DoubleBuffer = original.asInstanceOf[DoubleBuffer]
@@ -211,9 +212,9 @@ class Buffer[A: ClassTag] private (val original: JavaBuffer) extends Comparable[
 
 object Buffer {
 
-  def apply[A: ClassTag](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
+  def apply[@sp A: ClassTag](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
 
-  def allocate[A: ClassTag](capacity: Int): Buffer[A] = {
+  def allocate[@sp A: ClassTag](capacity: Int): Buffer[A] = {
      classTag[A] match {
       case FloatTag => Buffer(FloatBuffer.allocate(capacity)).asInstanceOf[Buffer[A]]
       case DoubleTag => Buffer(DoubleBuffer.allocate(capacity)).asInstanceOf[Buffer[A]]
@@ -225,7 +226,7 @@ object Buffer {
     }
   }
 
-  def wrap[A: ClassTag](array: Array[A], offset: Int, length: Int): Buffer[A] = {
+  def wrap[@sp A: ClassTag](array: Array[A], offset: Int, length: Int): Buffer[A] = {
     classTag[A] match {
       case FloatTag => Buffer[A](FloatBuffer.wrap(array.asInstanceOf[Array[Float]], offset, length))
       case DoubleTag => Buffer[A](DoubleBuffer.wrap(array.asInstanceOf[Array[Double]], offset, length))
@@ -237,7 +238,11 @@ object Buffer {
     }
   }
 
-  def wrap[A: ClassTag](array: Array[A]): Buffer[A] = wrap(array, 0, array.length)
+  def wrap[@sp A: ClassTag](array: Array[A]): Buffer[A] = wrap(array, 0, array.length)
+
+  def tabulate[@sp A: ClassTag](capacity: Int)(f: Int => A): Buffer[A] = {
+    (0 until capacity).foldLeft(Buffer.allocate[A](capacity))((b, i) => b.put(i, f(i)))
+  }
 
   // ## Implicit conversions ##
   // TBuffer -> Buffer[T]

@@ -2,7 +2,6 @@ package org.scanet.linalg
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scanet.core.NativeArray
 import org.scanet.linalg.Op.const
 
 class OpTest extends AnyFlatSpec with Matchers {

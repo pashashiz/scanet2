@@ -1,6 +1,5 @@
 package org.scanet.linalg
 
-import org.bytedeco.javacpp.BytePointer
 import org.scanet.core.{Buffer, NativeArray, _}
 import org.bytedeco.tensorflow.global.tensorflow.{DT_DOUBLE, DT_FLOAT, DT_INT16, DT_INT32, DT_INT64, DT_INT8}
 import org.bytedeco.tensorflow.{TensorShape, Tensor => NativeTensor}
@@ -11,10 +10,27 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.{ClassTag, classTag}
 import scala.language.implicitConversions
+import scala.{specialized => sp}
 
 case class Shape(dims: List[Int]) {
 
+  require(dims.forall(_ > 0), "dimension size cannot be 0")
   val power: Int = dims.product
+  val dimsPower: List[Int] = {
+    val powers = dims.foldLeft(List(power))((power, dim) => power.head / dim :: power)
+    powers.reverse.tail
+  }
+
+  def indexOf(absPosition: Int): List[Int] = {
+    val (indexes, _) = dimsPower.foldLeft((List[Int](), absPosition))(
+      (acc, dimPower) => {
+        val (indexes, prevPos) = acc
+        val index = prevPos / dimPower
+        val nextPos = prevPos % dimPower
+        (index :: indexes, nextPos)
+      })
+    indexes.reverse
+  }
 
   def rank: Int = dims.size
 
@@ -29,11 +45,13 @@ object Shape {
 
   def of(native: NativeTensor): Shape = {
     val numDims = native.dims()
+
     @tailrec
     def iter(next: Int, acc: List[Int]): List[Int] = {
       if (numDims == next) acc
       else iter(next + 1, native.dim_size(next).toInt :: acc)
     }
+
     Shape(iter(0, Nil).reverse)
   }
 
@@ -42,12 +60,11 @@ object Shape {
 
 }
 
-class Tensor[A: ClassTag](val native: NativeTensor) {
-
-  val shape: Shape = Shape.of(native)
+class Tensor[@sp A: ClassTag](val shape: Shape, val native: NativeTensor) {
 
   val buffer: Buffer[A] = {
     def data: NativeArray[Byte] = native.tensor_data()
+
     data.to[A].asBuffer
   }
 
@@ -60,15 +77,16 @@ class Tensor[A: ClassTag](val native: NativeTensor) {
       if (buffer.limit == index) Stream.empty
       else buffer.get(index) #:: next(index + 1)
     }
+
     next(buffer.position)
   }
 
   // indexing and slicing
   // todo
 
-  override def toString: String = s"Tensor[${classTag[A]}](shape=$shape, size=${buffer.limit})"
+  override def toString: String = s"Tensor[${classTag[A]}](shape=$shape, size=${buffer.limit}): ${show()}"
 
-  def showData(size: Int = 20): String = {
+  def show(size: Int = 20): String = {
     if (shape.isScalar) {
       buffer.get(buffer.position).toString
     } else {
@@ -86,17 +104,21 @@ class Tensor[A: ClassTag](val native: NativeTensor) {
       //     [4, 5, 6]
       //   ]
       // ]
-      s"[${toArray.mkString(", ")}]"
+      s"[${toStream.take(size).mkString(", ")}]"
     }
   }
 
-  def show(size: Int = 20): String =  s"$toString: ${showData(size)}"
+  override def hashCode(): Int = shape.hashCode() + buffer.hashCode
 
+  override def equals(obj: Any): Boolean = obj match {
+    case other: Tensor[A] => other.shape == shape && other.buffer == buffer
+    case _ => false
+  }
 }
 
 object Tensor {
 
-  private def nativeTypeOf[A: ClassTag]: Int = classTag[A] match {
+  private def nativeTypeOf[@sp A: ClassTag]: Int = classTag[A] match {
     case FloatTag => DT_FLOAT
     case DoubleTag => DT_DOUBLE
     case LongTag => DT_INT64
@@ -106,37 +128,80 @@ object Tensor {
     case _ => error(s"Type ${classTag[A]} is not supported")
   }
 
-  def allocate[A: ClassTag](shape: Shape): Tensor[A] = {
+  def allocate[@sp A: ClassTag](shape: Shape): Tensor[A] = {
     Tensor(new NativeTensor(nativeTypeOf[A], shape))
   }
 
-  def apply[A: ClassTag](native: NativeTensor): Tensor[A] = new Tensor(native)
+  def apply[@sp A: ClassTag](native: NativeTensor): Tensor[A] =
+  // note: pre-initialized shape to overcome @sp issue https://github.com/scala/bug/issues/4511
+    new Tensor(Shape.of(native), native)
 
-  def apply[A: ClassTag](data: Buffer[A], shape: Shape): Tensor[A] = {
+  def apply[@sp A: ClassTag](data: Buffer[A], shape: Shape): Tensor[A] = {
     val tensor = allocate[A](shape)
     tensor.buffer.put(data)
     tensor.buffer.rewind
     tensor
   }
 
-  def apply[A: ClassTag](data: Array[A], shape: Shape): Tensor[A] = {
+  def apply[@sp A: ClassTag](data: Array[A], shape: Shape): Tensor[A] = {
     require(data.length == shape.power,
       s"Shape$shape requires ${shape.power} elements but was passed ${data.length}")
     apply(Buffer.wrap(data), shape)
   }
 
-  def scalar[A: ClassTag](value: A): Tensor[A] = apply(Array(value), Shape())
+  def scalar[@sp A: ClassTag](value: A): Tensor[A] = apply(Array(value), Shape())
 
-  def vector[A: ClassTag](array: Array[A]): Tensor[A] = apply(array, Shape(array.length))
+  def vector[@sp A: ClassTag](array: Array[A]): Tensor[A] = apply(array, Shape(array.length))
 
-  def vector[A: ClassTag](elements: A*): Tensor[A] = vector(elements.toArray)
+  def vector[@sp A: ClassTag](elements: A*): Tensor[A] = vector(elements.toArray)
 
-  def matrix[A: ClassTag](rows: Array[A]*): Tensor[A] = {
+  def matrix[@sp A: ClassTag](rows: Array[A]*): Tensor[A] = {
     require(rows.nonEmpty, "at least one row is required")
     val rowSizes = rows.toList.map(_.length)
     require(rowSizes.distinct.size == 1, "all rows should have the same length")
     val data = rows.foldLeft(new ArrayBuffer[A](rowSizes.sum))((buffer, row) => buffer ++= row).toArray
     apply(data, Shape(rowSizes.length, rowSizes.head))
   }
+
+  def zeros[@sp A: ClassTag](shape: Int*): Tensor[A] =
+    zeros(Shape(shape.toList))
+
+  def zeros[@sp A: ClassTag](shape: Shape): Tensor[A] =
+    Tensor(Buffer.allocate[A](shape.power), shape)
+
+  def fill[@sp A: ClassTag](shape: Int*)(value: A): Tensor[A] =
+    fill(Shape(shape.toList))(value)
+
+  def fill[@sp A: ClassTag](shape: Shape)(value: A): Tensor[A] =
+    Tensor(Buffer.tabulate[A](shape.power)(_ => value), shape)
+
+  def tabulate[@sp A: ClassTag](d1: Int)(f: Int => A): Tensor[A] =
+    tabulate(Shape(d1))(idx => f(idx.head))
+
+  def tabulate[@sp A: ClassTag](d1: Int, d2: Int)(f: (Int, Int) => A): Tensor[A] =
+    tabulate(Shape(d1, d2))(idx => f(idx.head, idx(1)))
+
+  def tabulate[@sp A: ClassTag](d1: Int, d2: Int, d3: Int)(f: (Int, Int, Int) => A): Tensor[A] =
+    tabulate(Shape(d1, d2, d3))(idx => f(idx.head, idx(1), idx(2)))
+
+  def tabulate[@sp A: ClassTag](shape: Shape)(f: List[Int] => A): Tensor[A] = {
+    val buffer = Buffer.tabulate[A](shape.power)(index => f(shape.indexOf(index)))
+    Tensor(buffer, shape)
+  }
+
+  def diag[@sp A: ClassTag](values: A*): Tensor[A] = diag(values.toArray)
+
+  def diag[@sp A: ClassTag](values: Array[A]): Tensor[A] = ???
+
+  // todo: need to add Numeric[A] typeclass, needs zero
+  def eye[@sp A: ClassTag](n: Int): Tensor[A] = ???
+
+  // todo: need to add Numeric[A] typeclass, will work for int, long, short, byte only
+  def range[@sp A: ClassTag](from: A, to: A): Tensor[A] = ???
+
+  def linspace[@sp A: ClassTag](first: A, second: A, elements: Int): Tensor[A] = ???
+
+
+  // todo: more methods to create tensors
 
 }
