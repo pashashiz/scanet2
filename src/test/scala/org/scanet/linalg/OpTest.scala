@@ -12,4 +12,10 @@ class OpTest extends AnyFlatSpec with Matchers {
     val tensor: Tensor[Float] = session.run(expr)
     println(tensor.show())
   }
+
+  "resulting tensor" should "be specialized" in {
+    val session = new Session()
+    val tensor: Tensor[Float] = session.run(const("a", 5.0f))
+    tensor.getClass.getName should endWith("Tensor$mcF$sp")
+  }
 }

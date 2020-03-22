@@ -118,7 +118,7 @@ class Tensor[@sp A: ClassTag](val shape: Shape, val native: NativeTensor) {
 
 object Tensor {
 
-  private def nativeTypeOf[@sp A: ClassTag]: Int = classTag[A] match {
+  private def nativeTypeOf[A: ClassTag]: Int = classTag[A] match {
     case FloatTag => DT_FLOAT
     case DoubleTag => DT_DOUBLE
     case LongTag => DT_INT64
@@ -185,6 +185,7 @@ object Tensor {
     tabulate(Shape(d1, d2, d3))(idx => f(idx.head, idx(1), idx(2)))
 
   def tabulate[@sp A: ClassTag](shape: Shape)(f: List[Int] => A): Tensor[A] = {
+    // note: could be optimized, cause indexOf is a reverse operation
     val buffer = Buffer.tabulate[A](shape.power)(index => f(shape.indexOf(index)))
     Tensor(buffer, shape)
   }
