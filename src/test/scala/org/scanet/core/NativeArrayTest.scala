@@ -2,6 +2,7 @@ package org.scanet.core
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scanet.test.CustomMatchers
+import org.scanet.instances.core._
 
 class NativeArrayTest extends AnyFlatSpec with CustomMatchers  {
 

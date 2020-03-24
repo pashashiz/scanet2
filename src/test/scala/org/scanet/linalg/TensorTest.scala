@@ -2,6 +2,7 @@ package org.scanet.linalg
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scanet.test.CustomMatchers
+import org.scanet.instances.core._
 
 class TensorTest extends AnyFlatSpec with CustomMatchers {
 
@@ -41,6 +42,7 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
   it should "be tabulated" in {
      Tensor.tabulate[Int](2, 2)((i, j) => (i + 1) * (j + 1)) should
        be(Tensor.matrix(Array(1, 2), Array(2, 4)))
+    // Tensor.zeros[Int](2,2,2)
   }
 
 }
