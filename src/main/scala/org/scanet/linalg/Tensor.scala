@@ -114,7 +114,7 @@ class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor) {
   }
 }
 
-object Tensor {
+object Tensor extends NumericInstances {
 
   def allocate[@sp A: Numeric](shape: Shape): Tensor[A] = {
     Tensor(new NativeTensor(Numeric[A].tag, shape))
@@ -138,6 +138,8 @@ object Tensor {
   }
 
   def scalar[@sp A: Numeric](value: A): Tensor[A] = apply(Array(value)(Numeric[A].classTag), Shape())
+
+  def vector(range: Range): Tensor[Int] = apply[Int](range.toArray[Int], Shape(range.length))
 
   def vector[@sp A: Numeric](array: Array[A]): Tensor[A] = apply(array, Shape(array.length))
 
@@ -184,7 +186,8 @@ object Tensor {
     Tensor(buffer, shape)
   }
 
-  def diag[@sp A: Numeric](values: A*): Tensor[A] = diag(values.toArray(Numeric[A].classTag))
+  def diag[@sp A: Numeric](values: A*): Tensor[A] =
+    diag(values.toArray(Numeric[A].classTag))
 
   def diag[@sp A: Numeric](values: Array[A]): Tensor[A] = {
     val zero = Numeric[A].zero
@@ -192,14 +195,33 @@ object Tensor {
       if (x == y) values(x) else zero)
   }
 
-  def eye[@sp A: Numeric](n: Int): Tensor[A] = diag[A](Array.fill(n)(Numeric[A].one)(Numeric[A].classTag))
+  def eye[@sp A: Numeric](n: Int): Tensor[A] =
+    diag[A](Array.fill(n)(Numeric[A].one)(Numeric[A].classTag))
 
-  def linspace[@sp A: Numeric](first: A, last: A, length: Int = 100): Tensor[A] = {
-    val increment = (last - first) / (length - 1)
-    tabulate(length)(i => first.plus(increment * i))
+  def linspace[@sp A: Numeric](first: A, last: A, size: Int = 100): Tensor[A] = {
+    val increment = (last - first) / (size - 1)
+    tabulate(size)(i => first plus (increment * i))
   }
 
-  def range[@sp A: Numeric](from: A, to: A, step: Int = 1): Tensor[A] = ???
+  // 1 until 5 by 2 = 1, 3, 5
+  // sizeInc = (5 - 1)/2 + 1 = 3
+
+  // 1 until 5 by 2.1 = 1, 3.1
+  // sizeInc = (5 - 1)/2.1 + 1 = 2
+
+  // (inclusive && 1 + 2 * 2 == end) ? sizeExclusive + 1 : sizeExclusive
+  def range[@sp A: Numeric](start: A, end: A, step: A, inclusive: Boolean = false): Tensor[A] = {
+    val sizeAprox = ((end - start) / step).toInt + 1
+    val endAprox = start.plus(step * (sizeAprox - 1))
+    val size =
+      if (endAprox < end || inclusive && (endAprox === end)) {
+        sizeAprox
+      } else {
+        sizeAprox - 1
+      }
+    tabulate(size.toInt)(i => start plus (step * i))
+  }
+
 
   // todo: more methods to create tensors
 

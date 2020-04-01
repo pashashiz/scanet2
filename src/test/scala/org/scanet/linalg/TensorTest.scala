@@ -4,6 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scanet.test.CustomMatchers
 import org.scanet.instances.core._
 
+
 class TensorTest extends AnyFlatSpec with CustomMatchers {
 
   "scalar tensor" should "be allocated" in {
@@ -68,6 +69,27 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
   it should "be created for Float" in {
     Tensor.linspace(2.0f, 4.0f, 5) should
       be(Tensor.vector(2.0f, 2.5f, 3.0f, 3.5f, 4.0f))
+  }
+
+  "vector" should "be created from a range" in {
+    Tensor.vector(1 to 10 by 2) should
+      be(Tensor.vector(1, 3, 5, 7, 9))
+  }
+
+  it should "be created from exclusive range" in {
+    Tensor.range(1, 5, 2) should be(Tensor.vector(1, 3))
+  }
+
+  it should "be created from exclusive range with float" in {
+    Tensor.range(1.0f, 5.0f, 2.1f) should be(Tensor.vector(1f, 3.1f))
+  }
+
+  it should "be created from inclusive range" in {
+    Tensor.range(1, 5, 2, inclusive = true) should be(Tensor.vector(1, 3, 5))
+  }
+
+  it should "be created from inclusive range with float" in {
+    Tensor.range(1.0f, 6.0f, 2.5f, inclusive = true) should be(Tensor.vector(1f, 3.5f, 6.0f))
   }
 
 }
