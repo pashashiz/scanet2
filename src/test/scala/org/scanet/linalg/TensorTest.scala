@@ -42,7 +42,32 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
   it should "be tabulated" in {
      Tensor.tabulate[Int](2, 2)((i, j) => (i + 1) * (j + 1)) should
        be(Tensor.matrix(Array(1, 2), Array(2, 4)))
-    // Tensor.zeros[Int](2,2,2)
+  }
+
+  "diagonal matrix" should "be created" in {
+    Tensor.diag[Int](1, 2, 3) should be(
+      Tensor.matrix(
+        Array(1, 0, 0),
+        Array(0, 2, 0),
+        Array(0, 0, 3)))
+  }
+
+  "eye matrix" should "be created" in {
+    Tensor.eye[Int](3) should be(
+      Tensor.matrix(
+        Array(1, 0, 0),
+        Array(0, 1, 0),
+        Array(0, 0, 1)))
+  }
+
+  "linspace vector" should "be created for Int" in {
+    Tensor.linspace(2, 10, 5) should
+      be(Tensor.vector(2, 4, 6, 8, 10))
+  }
+
+  it should "be created for Float" in {
+    Tensor.linspace(2.0f, 4.0f, 5) should
+      be(Tensor.vector(2.0f, 2.5f, 3.0f, 3.5f, 4.0f))
   }
 
 }

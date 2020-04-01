@@ -1,11 +1,11 @@
 package org.scanet.core
 
 import org.bytedeco.javacpp.{BytePointer, DoublePointer, FloatPointer, IntPointer, LongPointer, Pointer, ShortPointer}
-import org.scanet.core.Numerical._
+import org.scanet.core.Numeric._
 import scala.language.implicitConversions
 import scala.{specialized => sp}
 
-class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable {
+class NativeArray[@sp A: Numeric](val pointer: Pointer) extends AutoCloseable {
 
   def asFloat: FloatPointer = pointer.asInstanceOf[FloatPointer]
   def asDouble: DoublePointer = pointer.asInstanceOf[DoublePointer]
@@ -14,9 +14,9 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
   def asShort: ShortPointer = pointer.asInstanceOf[ShortPointer]
   def asByte: BytePointer = pointer.asInstanceOf[BytePointer]
 
-  def to[@sp B: Numerical]: NativeArray[B] = {
-    val currentType = Numerical[A].tag
-    val newType = Numerical[B].tag
+  def to[@sp B: Numeric]: NativeArray[B] = {
+    val currentType = Numeric[A].tag
+    val newType = Numeric[B].tag
       if (currentType == newType) {
         this.asInstanceOf[NativeArray[B]]
       }
@@ -28,7 +28,7 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
           case IntTag => new IntPointer(pointer)
           case ShortTag => new ShortPointer(pointer)
           case ByteTag => new BytePointer(pointer)
-          case _ => error(s"Pointer[${Numerical[A].show}] is not supported")
+          case _ => error(s"Pointer[${Numeric[A].show}] is not supported")
         }
         val sizeInBytes = pointer.capacity() * pointer.sizeof()
         val size: Long = sizeInBytes / newPointer.sizeof()
@@ -64,40 +64,40 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
 
   def get(i: Int): A = {
     require(i < size, s"index $i is out of bound: [0, $size]")
-    Numerical[A].tag match {
+    Numeric[A].tag match {
       case FloatTag => asFloat.get(i).asInstanceOf[A]
       case DoubleTag => asDouble.get(i).asInstanceOf[A]
       case LongTag => asLong.get(i).asInstanceOf[A]
       case IntTag => asInt.get(i).asInstanceOf[A]
       case ShortTag => asShort.get(i).asInstanceOf[A]
       case ByteTag => asByte.get(i).asInstanceOf[A]
-      case _ => error(s"NativeArray[${Numerical[A].show}] is not supported")
+      case _ => error(s"NativeArray[${Numeric[A].show}] is not supported")
     }
   }
 
   def get(array: Array[A]): NativeArray[A] = get(array, 0, array.length)
 
   def get(array: Array[A], offset: Int, length: Int): NativeArray[A] =
-    Numerical[A].tag match {
+    Numeric[A].tag match {
       case FloatTag => asFloat.get(array.asInstanceOf[Array[Float]], offset, length); this;
       case DoubleTag => asDouble.get(array.asInstanceOf[Array[Double]], offset, length); this;
       case LongTag => asLong.get(array.asInstanceOf[Array[Long]], offset, length); this;
       case IntTag => asInt.get(array.asInstanceOf[Array[Int]], offset, length); this;
       case ShortTag => asShort.get(array.asInstanceOf[Array[Short]], offset, length); this;
       case ByteTag => asByte.get(array.asInstanceOf[Array[Byte]], offset, length); this;
-      case _ => error(s"NativeArray[${Numerical[A].show}] is not supported")
+      case _ => error(s"NativeArray[${Numeric[A].show}] is not supported")
     }
 
   def put(i: Int, v: A): NativeArray[A] = {
     require(i < size, s"index $i is out of bound: [0, $size]")
-    Numerical[A].tag match {
+    Numeric[A].tag match {
       case FloatTag => asFloat.put(i.toLong, v.asInstanceOf[Float]); this;
       case DoubleTag => asDouble.put(i.toLong, v.asInstanceOf[Double]); this;
       case LongTag => asLong.put(i.toLong, v.asInstanceOf[Long]); this;
       case IntTag => asInt.put(i.toLong, v.asInstanceOf[Int]); this;
       case ShortTag => asShort.put(i.toLong, v.asInstanceOf[Short]); this;
       case ByteTag => asByte.put(i.toLong, v.asInstanceOf[Byte]); this;
-      case _ => error(s"NativeArray[${Numerical[A].show}] is not supported")
+      case _ => error(s"NativeArray[${Numeric[A].show}] is not supported")
     }
   }
 
@@ -106,19 +106,19 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
   def put(array: Array[A], offset: Int, length: Int): NativeArray[A] = {
     val targetSize = length - offset
     require(targetSize <= size, s"allowed array size is $size but tried to put $targetSize")
-    Numerical[A].tag match {
+    Numeric[A].tag match {
       case FloatTag => asFloat.put(array.asInstanceOf[Array[Float]], offset, length); this;
       case DoubleTag => asDouble.put().put(array.asInstanceOf[Array[Double]], offset, length); this;
       case LongTag => asLong.put(array.asInstanceOf[Array[Long]], offset, length); this;
       case IntTag => asInt.put(array.asInstanceOf[Array[Int]], offset, length); this;
       case ShortTag => asShort.put(array.asInstanceOf[Array[Short]], offset, length); this;
       case ByteTag => asByte.put(array.asInstanceOf[Array[Byte]], offset, length); this;
-      case _ => error(s"NativeArray[${Numerical[A].show}] is not supported")
+      case _ => error(s"NativeArray[${Numeric[A].show}] is not supported")
     }
   }
 
   def toArray: Array[A] = {
-    val array: Array[A] = Array.ofDim[A](size)(Numerical[A].classTag)
+    val array: Array[A] = Array.ofDim[A](size)(Numeric[A].classTag)
     for (i <- array.indices) {
       array(i) = get(i)
     }
@@ -142,7 +142,7 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
     case _ => false
   }
 
-  override def toString: String = s"NativeArray[${Numerical[A].show}](capacity=$capacity, position=$position, limit=$limit, address=${pointer.address()})" + show()
+  override def toString: String = s"NativeArray[${Numeric[A].show}](capacity=$capacity, position=$position, limit=$limit, address=${pointer.address()})" + show()
 
   def show(n: Int = 20): String = {
     val elements = toStream.take(n).mkString(", ")
@@ -150,26 +150,26 @@ class NativeArray[@sp A: Numerical](val pointer: Pointer) extends AutoCloseable 
   }
 }
 
-object NativeArray extends TFTypeInstances {
+object NativeArray extends NumericInstances {
 
   loadNative()
 
-  def apply[@sp A: Numerical](size: Int): NativeArray[A] =
-    Numerical[A].tag match {
+  def apply[@sp A: Numeric](size: Int): NativeArray[A] =
+    Numeric[A].tag match {
       case FloatTag => new NativeArray[A](new FloatPointer(size.toLong))
       case DoubleTag => new NativeArray[A](new DoublePointer(size.toLong))
       case LongTag => new NativeArray[A](new LongPointer(size.toLong))
       case IntTag => new NativeArray[A](new IntPointer(size.toLong))
       case ShortTag => new NativeArray[A](new ShortPointer(size.toLong))
       case ByteTag => new NativeArray[A](new BytePointer(size.toLong))
-      case _ => error(s"NativeArray[${Numerical[A].show}] is not supported")
+      case _ => error(s"NativeArray[${Numeric[A].show}] is not supported")
     }
 
-  def apply[@sp A: Numerical](array: A*): NativeArray[A] = {
-    NativeArray[A](array.length).putAll(array.toArray(Numerical[A].classTag))
+  def apply[@sp A: Numeric](array: A*): NativeArray[A] = {
+    NativeArray[A](array.length).putAll(array.toArray(Numeric[A].classTag))
   }
 
-  def apply[@sp A: Numerical](array: Array[A]): NativeArray[A] = {
+  def apply[@sp A: Numeric](array: Array[A]): NativeArray[A] = {
     NativeArray[A](array.length).putAll(array)
   }
 
@@ -180,8 +180,8 @@ object NativeArray extends TFTypeInstances {
   // Array[T] -> NativeArray[T]
   // Array[T] -> TPointer
 
-  implicit def pointerArrayToArray[A: Numerical](pointer: NativeArray[A]): Array[A] = pointer.toArray
-  implicit def arrayToPointerArray[A: Numerical](array: Array[A]): NativeArray[A] = NativeArray(array)
+  implicit def pointerArrayToArray[A: Numeric](pointer: NativeArray[A]): Array[A] = pointer.toArray
+  implicit def arrayToPointerArray[A: Numeric](array: Array[A]): NativeArray[A] = NativeArray(array)
 
   implicit def floatPointerToPointerArray(pointer: FloatPointer): NativeArray[Float] = new NativeArray[Float](pointer)
   implicit def floatPointerToArray(pointer: FloatPointer): Array[Float] = floatPointerToPointerArray(pointer)

@@ -2,12 +2,12 @@ package org.scanet.core
 
 import java.nio.{ByteBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer, Buffer => JavaBuffer}
 
-import org.scanet.core.Numerical._
+import org.scanet.core.Numeric._
 
 import scala.language.implicitConversions
 import scala.{specialized => sp}
 
-class Buffer[@sp A: Numerical](val original: JavaBuffer) extends Comparable[Buffer[A]] {
+class Buffer[@sp A: Numeric](val original: JavaBuffer) extends Comparable[Buffer[A]] {
 
   private def asFloat: FloatBuffer = original.asInstanceOf[FloatBuffer]
   private def asDouble: DoubleBuffer = original.asInstanceOf[DoubleBuffer]
@@ -16,118 +16,118 @@ class Buffer[@sp A: Numerical](val original: JavaBuffer) extends Comparable[Buff
   private def asShort: ShortBuffer = original.asInstanceOf[ShortBuffer]
   private def asByte: ByteBuffer = original.asInstanceOf[ByteBuffer]
 
-  def slice: Buffer[A] = Numerical[A].tag match {
+  def slice: Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.slice(); this
     case DoubleTag => asDouble.slice(); this
     case LongTag => asLong.slice(); this
     case IntTag => asInt.slice(); this
     case ShortTag => asShort.slice(); this
     case ByteTag => asByte.slice(); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def duplicate: Buffer[A] = Numerical[A].tag match {
+  def duplicate: Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.duplicate(); this
     case DoubleTag => asDouble.duplicate(); this
     case LongTag => asLong.duplicate(); this
     case IntTag => asInt.duplicate(); this
     case ShortTag => asShort.duplicate(); this
     case ByteTag => asByte.duplicate(); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def asReadOnlyBuffer: Buffer[A] = Numerical[A].tag match {
+  def asReadOnlyBuffer: Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.asReadOnlyBuffer(); this
     case DoubleTag => asDouble.asReadOnlyBuffer(); this
     case LongTag => asLong.asReadOnlyBuffer(); this
     case IntTag => asInt.asReadOnlyBuffer(); this
     case ShortTag => asShort.asReadOnlyBuffer(); this
     case ByteTag => asByte.asReadOnlyBuffer(); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def get: A = Numerical[A].tag match {
+  def get: A = Numeric[A].tag match {
     case FloatTag => asFloat.get().asInstanceOf[A]
     case DoubleTag => asDouble.get().asInstanceOf[A]
     case LongTag => asLong.get().asInstanceOf[A]
     case IntTag => asInt.get().asInstanceOf[A]
     case ShortTag => asShort.get().asInstanceOf[A]
     case ByteTag => asByte.get().asInstanceOf[A]
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def put(f: A): Buffer[A] = Numerical[A].tag match {
+  def put(f: A): Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.put(f.asInstanceOf[Float]); this
     case DoubleTag => asDouble.put(f.asInstanceOf[Double]); this
     case LongTag => asLong.put(f.asInstanceOf[Long]); this
     case IntTag => asInt.put(f.asInstanceOf[Int]); this
     case ShortTag => asShort.put(f.asInstanceOf[Short]); this
     case ByteTag => asByte.put(f.asInstanceOf[Byte]); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def get(index: Int): A = Numerical[A].tag match {
+  def get(index: Int): A = Numeric[A].tag match {
     case FloatTag => asFloat.get(index).asInstanceOf[A]
     case DoubleTag => asDouble.get(index).asInstanceOf[A]
     case LongTag => asLong.get(index).asInstanceOf[A]
     case IntTag => asInt.get(index).asInstanceOf[A]
     case ShortTag => asShort.get(index).asInstanceOf[A]
     case ByteTag => asByte.get(index).asInstanceOf[A]
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def put(index: Int, f: A): Buffer[A] = Numerical[A].tag match {
+  def put(index: Int, f: A): Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.put(index, f.asInstanceOf[Float]); this
     case DoubleTag => asDouble.put(index, f.asInstanceOf[Double]); this
     case LongTag => asLong.put(index, f.asInstanceOf[Long]); this
     case IntTag => asInt.put(index, f.asInstanceOf[Int]); this
     case ShortTag => asShort.put(index, f.asInstanceOf[Short]); this
     case ByteTag => asByte.put(index, f.asInstanceOf[Byte]); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
   def get(dst: Array[A]): Buffer[A] = get(dst, 0, dst.length)
 
-  def put(src: Buffer[A]): Buffer[A] = Numerical[A].tag match {
+  def put(src: Buffer[A]): Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.put(src.asFloat); this
     case DoubleTag => asDouble.put(src.asDouble); this
     case LongTag => asLong.put(src.asLong); this
     case IntTag => asInt.put(src.asInt); this
     case ShortTag => asShort.put(src.asShort); this
     case ByteTag => asByte.put(src.asByte); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def put(src: Array[A], offset: Int, length: Int): Buffer[A] = Numerical[A].tag match {
+  def put(src: Array[A], offset: Int, length: Int): Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.put(src.asInstanceOf[Array[Float]], offset, length); this
     case DoubleTag => asDouble.put(src.asInstanceOf[Array[Double]], offset, length); this
     case LongTag => asLong.put(src.asInstanceOf[Array[Long]], offset, length); this
     case IntTag => asInt.put(src.asInstanceOf[Array[Int]], offset, length); this
     case ShortTag => asShort.put(src.asInstanceOf[Array[Short]], offset, length); this
     case ByteTag => asByte.put(src.asInstanceOf[Array[Byte]], offset, length); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
   def putAll(src: Array[A]): Buffer[A] = put(src, 0, src.length)
 
-  def compact: Buffer[A] = Numerical[A].tag match {
+  def compact: Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.compact(); this
     case DoubleTag => asDouble.compact(); this
     case LongTag => asLong.compact(); this
     case IntTag => asInt.compact(); this
     case ShortTag => asShort.compact(); this
     case ByteTag => asByte.compact(); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
-  def get(dst: Array[A], offset: Int, length: Int): Buffer[A] = Numerical[A].tag match {
+  def get(dst: Array[A], offset: Int, length: Int): Buffer[A] = Numeric[A].tag match {
     case FloatTag => asFloat.get(dst.asInstanceOf[Array[Float]], offset, length); this
     case DoubleTag => asDouble.get(dst.asInstanceOf[Array[Double]], offset, length); this
     case LongTag => asLong.get(dst.asInstanceOf[Array[Long]], offset, length); this
     case IntTag => asInt.get(dst.asInstanceOf[Array[Int]], offset, length); this
     case ShortTag => asShort.get(dst.asInstanceOf[Array[Short]], offset, length); this
     case ByteTag => asByte.get(dst.asInstanceOf[Array[Byte]], offset, length); this
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 
   def capacity: Int = original.capacity()
@@ -162,7 +162,7 @@ class Buffer[@sp A: Numerical](val original: JavaBuffer) extends Comparable[Buff
     if (hasArray) {
       original.array().asInstanceOf[Array[A]]
     } else {
-      val array = Array.ofDim[A](limit)(Numerical[A].classTag)
+      val array = Array.ofDim[A](limit)(Numeric[A].classTag)
       while (hasRemaining) {
         array(position) = get
       }
@@ -183,7 +183,7 @@ class Buffer[@sp A: Numerical](val original: JavaBuffer) extends Comparable[Buff
 
   def isDirect: Boolean = original.isDirect
 
-  override def toString: String = s"Buffer[${Numerical[A].show}](capacity=$capacity, position=$position, limit=$limit, direct=$isDirect)" + show()
+  override def toString: String = s"Buffer[${Numeric[A].show}](capacity=$capacity, position=$position, limit=$limit, direct=$isDirect)" + show()
 
   def show(n: Int = 20): String = {
     val elements = toStream.take(n).mkString(", ")
@@ -197,48 +197,48 @@ class Buffer[@sp A: Numerical](val original: JavaBuffer) extends Comparable[Buff
     case _ => false
   }
 
-  override def compareTo(that: Buffer[A]): Int = Numerical[A].tag match {
+  override def compareTo(that: Buffer[A]): Int = Numeric[A].tag match {
     case FloatTag => asFloat.compareTo(that.asFloat)
     case DoubleTag => asDouble.compareTo(that.asDouble)
     case LongTag => asLong.compareTo(that.asLong)
     case IntTag => asInt.compareTo(that.asInt)
     case ShortTag => asShort.compareTo(that.asShort)
     case ByteTag => asByte.compareTo(that.asByte)
-    case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+    case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
   }
 }
 
-object Buffer extends TFTypeInstances {
+object Buffer extends NumericInstances {
 
-  def apply[@sp A: Numerical](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
+  def apply[@sp A: Numeric](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
 
-  def allocate[@sp A: Numerical](capacity: Int): Buffer[A] = {
-    Numerical[A].tag match {
+  def allocate[@sp A: Numeric](capacity: Int): Buffer[A] = {
+    Numeric[A].tag match {
       case FloatTag => Buffer(FloatBuffer.allocate(capacity))
       case DoubleTag => Buffer(DoubleBuffer.allocate(capacity))
       case LongTag => Buffer(LongBuffer.allocate(capacity))
       case IntTag => Buffer(IntBuffer.allocate(capacity))
       case ShortTag => Buffer(ShortBuffer.allocate(capacity))
       case ByteTag => Buffer(ByteBuffer.allocate(capacity))
-      case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+      case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
     }
   }
 
-  def wrap[@sp A: Numerical](array: Array[A], offset: Int, length: Int): Buffer[A] = {
-    Numerical[A].tag match {
+  def wrap[@sp A: Numeric](array: Array[A], offset: Int, length: Int): Buffer[A] = {
+    Numeric[A].tag match {
       case FloatTag => Buffer[A](FloatBuffer.wrap(array.asInstanceOf[Array[Float]], offset, length))
       case DoubleTag => Buffer[A](DoubleBuffer.wrap(array.asInstanceOf[Array[Double]], offset, length))
       case LongTag => Buffer[A](LongBuffer.wrap(array.asInstanceOf[Array[Long]], offset, length))
       case IntTag => Buffer[A](IntBuffer.wrap(array.asInstanceOf[Array[Int]], offset, length))
       case ShortTag => Buffer[A](ShortBuffer.wrap(array.asInstanceOf[Array[Short]], offset, length))
       case ByteTag => Buffer[A](ByteBuffer.wrap(array.asInstanceOf[Array[Byte]], offset, length))
-      case _ => error(s"Buffer[${Numerical[A].show}] is not supported")
+      case _ => error(s"Buffer[${Numeric[A].show}] is not supported")
     }
   }
 
-  def wrap[@sp A: Numerical](array: Array[A]): Buffer[A] = wrap(array, 0, array.length)
+  def wrap[@sp A: Numeric](array: Array[A]): Buffer[A] = wrap(array, 0, array.length)
 
-  def tabulate[@sp A: Numerical](capacity: Int)(f: Int => A): Buffer[A] = {
+  def tabulate[@sp A: Numeric](capacity: Int)(f: Int => A): Buffer[A] = {
     (0 until capacity).foldLeft(Buffer.allocate[A](capacity))((b, i) => b.put(i, f(i)))
   }
 

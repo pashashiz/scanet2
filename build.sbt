@@ -9,7 +9,7 @@ scalaVersion := "2.12.8"
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
 libraryDependencies ++= Seq(
-  // "org.typelevel" %% "spire" % "0.14.1",
+   "org.typelevel" %% "spire" % "0.14.1",
   "org.typelevel" %% "cats-core" % "2.0.0",
   "org.typelevel" %% "simulacrum" % "1.0.0",
   "org.bytedeco" % "tensorflow-platform" % "1.15.0-1.5.2",

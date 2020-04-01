@@ -2,7 +2,7 @@ package org.scanet.linalg
 
 import org.bytedeco.tensorflow.{GraphDef, Scope, SessionOptions, StringTensorPairVector, StringVector, TensorVector, Session => NativeSession}
 import org.bytedeco.tensorflow.global.tensorflow.{Const, InitMain, TF_CHECK_OK}
-import org.scanet.core.Numerical
+import org.scanet.core.Numeric
 import org.scanet.linalg.Op.NativeOutput
 
 import scala.{specialized => sp}
@@ -31,7 +31,7 @@ object Op {
 
 class Session {
 
-  def run[@sp A1: Numerical](op: Op[A1]): Tensor[A1] = {
+  def run[@sp A1: Numeric](op: Op[A1]): Tensor[A1] = {
     InitMain("Scanet", null.asInstanceOf[Array[Int]], null)
     val scope = Scope.NewRootScope
     val output = op.compiler(Context(scope))
