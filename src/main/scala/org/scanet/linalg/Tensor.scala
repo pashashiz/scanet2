@@ -203,13 +203,6 @@ object Tensor extends NumericInstances {
     tabulate(size)(i => first plus (increment * i))
   }
 
-  // 1 until 5 by 2 = 1, 3, 5
-  // sizeInc = (5 - 1)/2 + 1 = 3
-
-  // 1 until 5 by 2.1 = 1, 3.1
-  // sizeInc = (5 - 1)/2.1 + 1 = 2
-
-  // (inclusive && 1 + 2 * 2 == end) ? sizeExclusive + 1 : sizeExclusive
   def range[@sp A: Numeric](start: A, end: A, step: A, inclusive: Boolean = false): Tensor[A] = {
     val sizeAprox = ((end - start) / step).toInt + 1
     val endAprox = start.plus(step * (sizeAprox - 1))
@@ -221,7 +214,6 @@ object Tensor extends NumericInstances {
       }
     tabulate(size.toInt)(i => start plus (step * i))
   }
-
 
   // todo: more methods to create tensors
 
