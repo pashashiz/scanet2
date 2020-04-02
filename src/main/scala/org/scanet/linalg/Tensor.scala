@@ -1,6 +1,7 @@
 package org.scanet.linalg
 
 import org.bytedeco.tensorflow.{TensorShape, Tensor => NativeTensor}
+import org.scanet.core.Generator.uniform
 import org.scanet.core.NativeArray._
 import org.scanet.core.{Buffer, NativeArray, _}
 
@@ -215,6 +216,8 @@ object Tensor extends NumericInstances {
     tabulate(size.toInt)(i => start plus (step * i))
   }
 
-  // todo: more methods to create tensors
-
+  def rand[@sp A: Numeric: Dist](shape: Shape, gen: Generator = uniform): Tensor[A] = {
+    val (_, arr) = Random[A](gen).next(shape.power)(Numeric[A].classTag, Dist[A])
+    Tensor[A](arr, shape)
+  }
 }

@@ -1,9 +1,9 @@
 package org.scanet.linalg
 
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scanet.core.Generator.uniform
 import org.scanet.test.CustomMatchers
 import org.scanet.instances.core._
-
 
 class TensorTest extends AnyFlatSpec with CustomMatchers {
 
@@ -92,4 +92,19 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
     Tensor.range(1.0f, 6.0f, 2.5f, inclusive = true) should be(Tensor.vector(1f, 3.5f, 6.0f))
   }
 
+  "random Int tensor" should "be created with uniform distribution" in {
+    Tensor.rand[Int](Shape(3), uniform(1)) should
+      be(Tensor.vector(384748, -1151252339, -549383847))
+  }
+
+  "random Float tensor" should "be created with uniform distribution" in {
+    Tensor.rand[Float](Shape(3), uniform(1)) should
+      be(Tensor.vector(8.952618E-5f, 0.73195314f, 0.8720866f))
+  }
+
+  "random Double tensor" should "be created with uniform distribution" in {
+    new java.util.Random()
+    Tensor.rand[Double](Shape(3), uniform(1L)) should
+      be(Tensor.vector(8.958178688844853E-5, 0.872086605065287, 0.7943048233411579))
+  }
 }

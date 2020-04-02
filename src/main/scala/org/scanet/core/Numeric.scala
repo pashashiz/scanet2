@@ -2,6 +2,7 @@ package org.scanet.core
 
 import org.bytedeco.tensorflow.global.tensorflow._
 import simulacrum.{op, typeclass}
+import scala.language.implicitConversions
 
 import scala.reflect.ClassTag
 
@@ -26,6 +27,7 @@ import scala.reflect.ClassTag
 }
 
 @typeclass trait Semiring[A] {
+  // todo: figure out why + operator is not resolved
   @op("+", alias = true)
   def plus[B: ConvertableFrom](left: A, right: B): A
   @op("*", alias = true)
@@ -36,6 +38,8 @@ import scala.reflect.ClassTag
   def zero: A
   @op("-", alias = true)
   def minus[B: ConvertableFrom](left: A, right: B): A
+  // todo: figure out why unary_- operator is not resolved
+  @op("unary_-", alias = true)
   def negate(a: A): A
 }
 

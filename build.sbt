@@ -16,3 +16,9 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.14.3" % "test",
   "org.scalatest" %% "scalatest" % "3.1.1" % "test"
   )
+
+scalacOptions ++= Seq(
+  "-Xlint",
+  "-deprecation",
+  "-feature"
+)
