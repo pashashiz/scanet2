@@ -1,5 +1,4 @@
 package org.scanet
-import scala.language.implicitConversions
 
 package object core {
 

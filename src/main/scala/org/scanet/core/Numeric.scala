@@ -2,7 +2,6 @@ package org.scanet.core
 
 import org.bytedeco.tensorflow.global.tensorflow._
 import simulacrum.{op, typeclass}
-import scala.language.implicitConversions
 
 import scala.reflect.ClassTag
 

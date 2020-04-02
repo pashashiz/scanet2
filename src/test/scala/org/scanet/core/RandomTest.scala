@@ -2,12 +2,13 @@ package org.scanet.core
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scanet.core.Generator.uniform
 import org.scanet.instances.core._
 
 class RandomTest extends AnyFlatSpec with Matchers {
 
   "uniform distribution" should "work for Int with one next" in {
-    val r1 = Random[Int](Generator.uniform(1L))
+    val r1 = Random[Int](uniform(1L))
     val (r2, v1) = r1.next
     val (_, v2) = r2.next
     v1 should be(384748)
@@ -15,8 +16,10 @@ class RandomTest extends AnyFlatSpec with Matchers {
   }
 
   "uniform distribution" should "work for Int with multiple next" in {
-    val (_, arr) = Random[Int](Generator.uniform(1L)).next(3)
-    arr should be(Array(384748, -1151252339, -549383847))
+    val x = Random[Int](uniform(1L))
+    println(x)
+    val (_, values) = Random[Int](uniform(1L)).next(3)
+    values should be(Array(384748, -1151252339, -549383847))
   }
 
 }

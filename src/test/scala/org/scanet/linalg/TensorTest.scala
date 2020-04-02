@@ -103,7 +103,6 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
   }
 
   "random Double tensor" should "be created with uniform distribution" in {
-    new java.util.Random()
     Tensor.rand[Double](Shape(3), uniform(1L)) should
       be(Tensor.vector(8.958178688844853E-5, 0.872086605065287, 0.7943048233411579))
   }
