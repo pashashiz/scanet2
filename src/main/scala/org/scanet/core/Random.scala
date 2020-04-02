@@ -41,10 +41,11 @@ class Generator(val seed: Long, val next: Long => Long) {
 }
 
 object Generator {
+
   def uniform: Generator = uniform(new java.util.Random().nextLong())
 
   /**
-   * Uniform generate can generate a stream of pseudorandom numbers.
+   * Uniform generator can generate a stream of pseudorandom numbers.
    * The class uses a 48-bit seed, which is modified using a linear congruential formula.
    * (See Donald Knuth, The Art of Computer Programming, Volume 2, Section 3.2.1.)
    *
