@@ -36,16 +36,6 @@ case class Slice(from: Int = 0, until: Int = -1) {
   }
 }
 
-object Slice {
-  trait Instances {
-    implicit def singleSlice: CanBuildSliceFrom[Int] = new SingleSlice {}
-    implicit def rangeSlice: CanBuildSliceFrom[Range] = new RangeSlice {}
-    implicit def unboundSlice: CanBuildSliceFrom[Unbound] = new UnboundSlice {}
-  }
-  trait Syntax extends Instances with CanBuildSliceFrom.ToCanBuildSliceFromOps
-  object syntax extends Syntax
-}
-
 @typeclass trait CanBuildSliceFrom[A] {
   def build(a: A): Slice
 }
@@ -59,10 +49,20 @@ trait RangeSlice extends CanBuildSliceFrom[Range] {
 }
 
 case class Unbound()
-object Unbound {
-  def :: : Unbound = Unbound()
-}
 
 trait UnboundSlice extends CanBuildSliceFrom[Unbound] {
   override def build(a: Unbound): Slice = Slice(0, -1)
+}
+
+
+object Slice {
+  trait Instances {
+    implicit def singleSlice: CanBuildSliceFrom[Int] = new SingleSlice {}
+    implicit def rangeSlice: CanBuildSliceFrom[Range] = new RangeSlice {}
+    implicit def unboundSlice: CanBuildSliceFrom[Unbound] = new UnboundSlice {}
+  }
+  trait Syntax extends Instances with CanBuildSliceFrom.ToCanBuildSliceFromOps
+  object syntax extends Syntax {
+    def :: : Unbound = Unbound()
+  }
 }

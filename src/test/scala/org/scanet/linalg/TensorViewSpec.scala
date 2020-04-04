@@ -3,7 +3,6 @@ package org.scanet.linalg
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scanet.linalg.Slice.syntax._
-import org.scanet.linalg.Unbound.::
 
 class TensorViewSpec extends AnyFlatSpec with Matchers {
 
