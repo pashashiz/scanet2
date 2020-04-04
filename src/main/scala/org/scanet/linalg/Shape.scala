@@ -43,7 +43,9 @@ case class Shape(dims: List[Int]) {
   def isInBound(projection: Projection): Boolean = {
     val rankInRange = projection.rank <= rank
     val numOutOfBounds = projection.slices.zip(dims)
-      .map { case (slice: Slice, max: Int) => slice.until - max }
+      .map { case (slice: Slice, max: Int) =>
+        if (slice.isOpenedRight) 0 else slice.until - max
+      }
       .count(_ > 0)
     rankInRange && numOutOfBounds == 0
   }
@@ -51,6 +53,28 @@ case class Shape(dims: List[Int]) {
   def head: Int = dims.head
 
   def tail: Shape = Shape(dims.tail)
+
+  def startDimsOf(dim: Int): Int = dims.takeWhile(_ == dim).size
+
+  def alignLeft(size: Int, using: Int): Shape = align(size, using, left = true)
+  def alignRight(size: Int, using: Int): Shape = align(size, using, left = false)
+  def align(size: Int, using: Int, left: Boolean): Shape = {
+    if (rank < size) {
+      val dimsToFill = size - rank
+      val filledDims = if (dimsToFill > 0) {
+        if (left) {
+          (0 until dimsToFill).map(_ => using) ++ dims
+        } else {
+          dims ++ (0 until dimsToFill).map(_ => using)
+        }
+      } else {
+        dims
+      }
+      Shape(filledDims.toList)
+    } else {
+      this
+    }
+  }
 
   override def toString: String = s"(${dims.mkString(", ")})"
 }
@@ -82,31 +106,33 @@ case class Projection(slices: List[Slice]) {
   def rank: Int = slices.size
   def adjustTo(shape: Shape): Projection = {
     require(shape.isInBound(this),
-      s"projection $this is out of bound, should be within $shape")
+      s"$this projection is out of bound, should fit shape $shape")
     val filledSlices = shape.dims
-      .zip(alignRightWith(Projection.of(shape)).slices)
-      .map { case (shapeSize: Int, slice: Slice) =>
+      .zip(alignRight(shape.rank, ::.build).slices)
+      .map { case (shapeSize: Int, slice: Slice) => {
         if (slice.isOpenedRight) (slice.from until shapeSize).build else slice}
+      }
     Projection(filledSlices)
   }
 
-  def shape: Shape = Shape(slices.map(_.size).dropWhile(_ == 1))
+  def shapeFull: Shape = Shape(slices.map(_.size))
+  def shapeShort: Shape = Shape(slices.map(_.size).dropWhile(_ == 1))
 
-  def alignLeftWith(other: Projection): Projection = alignWith(other, leftSide = true)
-  def alignRightWith(other: Projection): Projection = alignWith(other, leftSide = false)
-  def alignWith(other: Projection, leftSide: Boolean): Projection = {
-    if (rank < other.rank) {
-      val dimsToFill = other.rank - rank
+  def alignLeft(size: Int, using: Slice): Projection = align(size, using, left = true)
+  def alignRight(size: Int, using: Slice): Projection = align(size, using, left = false)
+  def align(size: Int, using: Slice, left: Boolean): Projection = {
+    if (rank < size) {
+      val dimsToFill = size - rank
       val filledSlices = if (dimsToFill > 0) {
-        if (leftSide) {
-          other.slices.take(dimsToFill) ++ slices
+        if (left) {
+          (0 until dimsToFill).map(_ => using) ++ slices
         } else {
-          slices ++ other.slices.take(dimsToFill)
+          slices ++ (0 until dimsToFill).map(_ => using)
         }
       } else {
         slices
       }
-      Projection(filledSlices)
+      Projection(filledSlices.toList)
     } else {
       this
     }
@@ -115,8 +141,9 @@ case class Projection(slices: List[Slice]) {
   // (*, *, *) :> (1, 2-4, *) = (1, 2-4, *)
   // (1, 2-4, *) :> (1, 2-4) = (1, 1, 2-4)
   def narrow(other: Projection): Projection = {
-    val aligned = other.alignLeftWith(Projection.fill(rank, 0))
-    val narrowedSlices = slices.zip(aligned.slices)
+    require(other.rank == rank,
+      s"given projection's rank ${other.rank} does not match to $rank rank")
+    val narrowedSlices = slices.zip(other.slices)
       .map { case (sliceThis: Slice, sliceOther: Slice) => sliceThis narrow sliceOther}
     Projection(narrowedSlices)
   }
@@ -143,15 +170,26 @@ object Projection {
     Projection((0 until rank).map(_ => value.build))
 }
 
-case class View(shape: Shape, projection: Projection) {
+case class View(originalShape: Shape, projection: Projection) {
 
-  val projectedShape: Shape = projection.shape
+  val projectedShapeFull: Shape = projection.shapeFull
+  val projectedShapeShort: Shape = projection.shapeShort
 
-  def narrow(other: Projection): View = new View(shape, projection narrow other)
+  def narrow(other: Projection): View = {
+    require(other.rank <= projectedShapeShort.rank,
+      s"$other projection's rank ${other.rank} should be less or equal " +
+        s"to shape's rank ${projectedShapeShort.rank}")
+    val adjusted = other
+      .alignRight(projectedShapeShort.rank, ::.build)
+      .adjustTo(projectedShapeShort)
+      .alignLeft(originalShape.rank, 0.build)
+    require(projectedShapeFull.isInBound(adjusted),
+      s"$other projection is out of bound, should fit shape $projectedShapeShort")
+    new View(originalShape, projection narrow adjusted)
+  }
 
   def positionOf(viewIndex: Index): Int = narrow(viewIndex.toProjection).positions.head
 
-  // todo: slice -> type class
   // todo: make eager optimized version
   // todo: make fully lazy
   def positions: Stream[Int] = {
@@ -167,8 +205,9 @@ case class View(shape: Shape, projection: Projection) {
           .foldLeft(Stream.empty[Int])((l, r) => l #::: r)
       }
     }
-    nestedIndexes(0, shape.dimsPower, projection)
+    nestedIndexes(0, originalShape.dimsPower, projection)
   }
+  override def toString: String = s"$originalShape x $projection -> $projectedShapeShort"
 }
 
 object View {

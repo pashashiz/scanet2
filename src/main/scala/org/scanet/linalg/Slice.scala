@@ -31,7 +31,11 @@ case class Slice(from: Int = 0, until: Int = -1) {
     } else {
       val start = if (isOpenedLeft) ":" else from.toString
       val end = if (isOpenedRight) ":" else until.toString
-      start + end
+      if (start == ":" || end == ":") {
+        s"$start$end"
+      } else {
+        s"$start-$end"
+      }
     }
   }
 }
