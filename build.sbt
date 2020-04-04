@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq(
   "-Xlint",
-  "-language:implicitConversions",
   "-deprecation",
-  "-feature"
+  "-feature",
+  "-language:implicitConversions"
 )

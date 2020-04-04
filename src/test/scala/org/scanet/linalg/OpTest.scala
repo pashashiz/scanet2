@@ -3,7 +3,7 @@ package org.scanet.linalg
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scanet.linalg.Op.const
-import org.scanet.instances.core._
+import org.scanet.syntax.core._
 
 class OpTest extends AnyFlatSpec with Matchers {
 

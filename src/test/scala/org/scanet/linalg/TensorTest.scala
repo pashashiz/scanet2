@@ -3,7 +3,7 @@ package org.scanet.linalg
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scanet.core.Generator.uniform
 import org.scanet.test.CustomMatchers
-import org.scanet.instances.core._
+import org.scanet.syntax.core._
 
 class TensorTest extends AnyFlatSpec with CustomMatchers {
 
@@ -105,5 +105,9 @@ class TensorTest extends AnyFlatSpec with CustomMatchers {
   "random Double tensor" should "be created with uniform distribution" in {
     Tensor.rand[Double](Shape(3), uniform(1L)) should
       be(Tensor.vector(8.958178688844853E-5, 0.872086605065287, 0.7943048233411579))
+  }
+
+  "matrix" should "be indexed by row number" in {
+    Tensor.eye[Int](3).get(Index(1)) should be(Tensor.vector(0, 1, 0))
   }
 }

@@ -7,37 +7,62 @@ import org.scanet.core.{Buffer, NativeArray, _}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.{specialized => sp}
-import org.scanet.instances.core._
+import org.scanet.syntax.core._
 
-class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor) {
+class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor, val position: Int, val limit: Int) {
 
   val buffer: Buffer[A] = {
     def data: NativeArray[Byte] = native.tensor_data()
-
     data.to[A].asBuffer
   }
 
-  def toScalar: A = buffer.get(0)
+  def toScalar: A = buffer.get(position + 0)
 
-  def toArray: Array[A] = buffer.toArray
+  def toArray: Array[A] = {
+    val array = buffer.position(position).limit(limit).toArray
+    buffer.position(0).limit(buffer.capacity)
+    array
+  }
 
   def toStream: Stream[A] = {
     def next(index: Int): Stream[A] = {
-      if (buffer.limit == index) Stream.empty
+      if (limit == index) Stream.empty
       else buffer.get(index) #:: next(index + 1)
     }
-
-    next(buffer.position)
+    next(position)
   }
 
-  // indexing and slicing
-  // todo
+  def get(index: Index): Tensor[A] = {
+    require(shape.isInBound(index),
+      s"index rank $index is out of bound, should be within $shape")
+    // given (4) and shape (5, 5)
+    // slice into virtual blocks [0, 4], [5, 9], [10, 14], [15, 19], [20, 25]
+    // take block 4: [20, 25]
+    // given (4, 2) and shape (5, 5)
+    // slice into virtual blocks [0, 4], [5, 9], [10, 14], [15, 19], [20, 25]
+    // slice block [[0], [1], [2], [3], [4]]
+    // take block 4: [20, 25], take block 3: [2]
 
-  override def toString: String = s"Tensor[${Numeric[A].show}](shape=$shape, size=${buffer.limit}): ${show()}"
+    // Tensor(5)(2)
+    // Tensor.view(20, 25) -> Tensor.view(2, 3) == Tensor.view(22, 23)
+
+
+    // View (*, *, *) & Shape(5, 5, 5)
+    // View (1, 2-3, *) -> ~Shape(3, 5)
+    // View (1, *) -> View(1, 2, *) -> ~Shape(5)
+    //
+    // View(shape + projection(slices)) -> current shape -> stream of sp elements
+
+    val dimPower = shape.head
+    val start = dimPower * index.head
+    new Tensor[A](shape.tail, native, start, start + dimPower)
+  }
+
+  override def toString: String = s"Tensor[${Numeric[A].show}](shape=$shape, size=${limit - position}: ${show()}"
 
   def show(size: Int = 20): String = {
     if (shape.isScalar) {
-      buffer.get(buffer.position).toString
+      buffer.get(position).toString
     } else {
       // todo: format and limit when slicing is implemented
       // vector: [1, 2, 3]
@@ -57,10 +82,12 @@ class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor) {
     }
   }
 
-  override def hashCode(): Int = shape.hashCode() + buffer.hashCode
+  override def hashCode(): Int = shape.hashCode() + toArray.foldLeft(1)((acc, a) => 31 * acc + a.hashCode())
 
   override def equals(obj: Any): Boolean = obj match {
-    case other: Tensor[A] => other.shape == shape && other.buffer == buffer
+    case other: Tensor[A] => {
+      other.shape == shape && (other.toArray sameElements toArray)
+    }
     case _ => false
   }
 }
@@ -71,9 +98,11 @@ object Tensor extends NumericInstances {
     Tensor(new NativeTensor(Numeric[A].tag, shape))
   }
 
-  def apply[@sp A: Numeric](native: NativeTensor): Tensor[A] =
-  // note: pre-initialized shape to overcome @sp issue https://github.com/scala/bug/issues/4511
-    new Tensor(Shape.of(native), native)
+  def apply[@sp A: Numeric](native: NativeTensor): Tensor[A] = {
+    // note: pre-initialized variables to overcome @sp issue https://github.com/scala/bug/issues/4511
+    val shape = Shape.of(native)
+    new Tensor(shape, native, 0, shape.power)
+  }
 
   def apply[@sp A: Numeric](data: Buffer[A], shape: Shape): Tensor[A] = {
     val tensor = allocate[A](shape)

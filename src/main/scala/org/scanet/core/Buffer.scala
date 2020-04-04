@@ -136,7 +136,7 @@ class Buffer[@sp A: Numeric](val original: JavaBuffer) extends Comparable[Buffer
 
   def limit: Int = original.limit()
 
-  def limit(newLimit: Int): Buffer[A] = {original.limit(); this}
+  def limit(newLimit: Int): Buffer[A] = {original.limit(newLimit); this}
 
   def mark: Buffer[A] = {original.mark(); this}
 
@@ -157,16 +157,13 @@ class Buffer[@sp A: Numeric](val original: JavaBuffer) extends Comparable[Buffer
   def hasArray: Boolean = original.hasArray
 
   def toArray: Array[A] = {
-    if (hasArray) {
-      original.array().asInstanceOf[Array[A]]
-    } else {
-      val array = Array.ofDim[A](limit)(Numeric[A].classTag)
-      while (hasRemaining) {
-        array(position) = get
-      }
-      rewind
-      array
+    val originalPosition = position
+    val array = Array.ofDim[A](limit - position)(Numeric[A].classTag)
+    while (hasRemaining) {
+      array(position - originalPosition) = get
     }
+    rewind
+    array
   }
 
   def toStream: Stream[A] = {
