@@ -133,7 +133,9 @@ class TensorSpec extends AnyFlatSpec with CustomMatchers {
 
   "matrix" should "be sliced 2 times" in {
     val matrix = Tensor.eye[Int](3)
-    matrix.get(0).get(1 until 3) should be(Tensor.vector(0, 0))
+    val vector = matrix(0)
+    val slicedVector = vector(1 until -1)
+    slicedVector should be(Tensor.vector(0, 0))
   }
 
   // todo

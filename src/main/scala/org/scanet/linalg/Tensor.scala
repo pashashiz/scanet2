@@ -36,7 +36,7 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
   def get[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3): Tensor[A] = get(Projection(s1, s2, s3))
   def get[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom, S4: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3, s4: S4): Tensor[A] = get(Projection(s1, s2, s3, s4))
 
-  def get(index: Projection): Tensor[A] = new Tensor(native, view narrow index)
+  def get(projection: Projection): Tensor[A] = new Tensor(native, view narrow projection)
 
   override def toString: String = s"Tensor[${Numeric[A].show}](shape=${view.projectedShapeShort}: ${show()}"
 
