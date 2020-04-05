@@ -4,7 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scanet.linalg.Slice.syntax._
 
-class TensorViewSpec extends AnyFlatSpec with Matchers {
+class ViewSpec extends AnyFlatSpec with Matchers {
 
   "view" should "produce right projection when same size" in {
     View(Shape(5, 5, 5), Projection(1, 2 until 4, ::))
@@ -72,47 +72,26 @@ class TensorViewSpec extends AnyFlatSpec with Matchers {
 
   it should "produce positions when taking :: projection" in {
     val view = View(Shape(3, 3)) narrow Projection(::, ::)
-    view.positions.toList should be(List(0, 1, 2, 3, 4, 5, 6, 7, 8))
+    view.positions should be(Array(0, 1, 2, 3, 4, 5, 6, 7, 8))
   }
 
   it should "produce positions when taking first row" in {
     val view = View(Shape(5, 5)) narrow Projection(0, ::)
-    view.positions.toList should be(List(0, 1, 2, 3, 4))
+    view.positions should be(Array(0, 1, 2, 3, 4))
   }
 
   it should "produce positions when taking second row" in {
     val view = View(Shape(5, 5)) narrow Projection(1, ::)
-    view.positions.toList should be(List(5, 6, 7, 8, 9))
+    view.positions should be(Array(5, 6, 7, 8, 9))
   }
 
   it should "produce position when taking index" in {
     val view = View(Shape(5, 5)) narrow Projection(1, 3)
-    view.positions.toList should be(List(8))
+    view.positions should be(Array(8))
   }
 
   it should "produce positions when taking nested projection" in {
     val view = View(Shape(5, 5, 5)) narrow Projection(1, 2 until 4, ::)
-    view.positions.toList should be(List(35, 36, 37, 38, 39, 40, 41, 42, 43, 44))
+    view.positions should be(Array(35, 36, 37, 38, 39, 40, 41, 42, 43, 44))
   }
-
-  "absolute position" should "be found by using index on view" in {
-    View(Shape(5, 5)) positionOf Index(1, 4) should be(9)
-  }
-
-  it should "produce positions when taking nested projection" in {
-    // View(Shape(100, 100, 100)).positions.toList // 13
-    val start = System.currentTimeMillis()
-//     (0 to 1000000).toList
-//    val arr = Array.ofDim[Int](1000000)
-//    var i = 0
-//    while (i < 1000000) {
-//      arr(i) = i
-//      i = i + 1x
-//    }
-    val s = Stream.range(0, 1000000).toList
-    val end = System.currentTimeMillis()
-    println(s.size)
-    println(end - start)
-  }
-
 }

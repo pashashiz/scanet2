@@ -9,11 +9,9 @@ case class Slice(from: Int = 0, until: Int = -1) {
   def isOpenedLeft: Boolean = from == 0
   def isOpenedRight: Boolean = until == -1
   def isSingle: Boolean = until - from == 1
-  @deprecated
-  def unbound: Boolean = from == 0 && until == -1
   def size: Int = until - from
   def elements: Seq[Int] = from until until
-  // (4-10) narrow (1-2) = (5, 6)
+  // (4-10) narrow (1-2) -> (5, 6)
   def narrow(other: Slice): Slice = {
     val start = from + other.from
     val end = if (isOpenedRight) {

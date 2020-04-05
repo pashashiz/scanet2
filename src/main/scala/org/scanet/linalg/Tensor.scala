@@ -32,7 +32,7 @@ class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor, val pos
     next(position)
   }
 
-  def get(index: Index): Tensor[A] = {
+  def get(index: Projection): Tensor[A] = {
     require(shape.isInBound(index),
       s"index rank $index is out of bound, should be within $shape")
     // given (4) and shape (5, 5)
@@ -53,9 +53,10 @@ class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor, val pos
     //
     // View(shape + projection(slices)) -> current shape -> stream of sp elements
 
-    val dimPower = shape.head
-    val start = dimPower * index.head
-    new Tensor[A](shape.tail, native, start, start + dimPower)
+//    val dimPower = shape.head
+    ////    val start = dimPower * index.head
+    ////    new Tensor[A](shape.tail, native, start, start + dimPower)
+    ???
   }
 
   override def toString: String = s"Tensor[${Numeric[A].show}](shape=$shape, size=${limit - position}: ${show()}"

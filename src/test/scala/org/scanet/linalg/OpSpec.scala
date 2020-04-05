@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scanet.linalg.Op.const
 import org.scanet.syntax.core._
 
-class OpTest extends AnyFlatSpec with Matchers {
+class OpSpec extends AnyFlatSpec with Matchers {
 
   "op example" should "work" in {
     val expr = const("a", 5.0f)

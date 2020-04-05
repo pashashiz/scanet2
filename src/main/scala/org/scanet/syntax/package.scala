@@ -1,7 +1,7 @@
 package org.scanet
 
 import org.scanet.core.{ConvertableFrom, ConvertableInstances, ConvertableTo, Dist, DistInstances, Eq, Field, Numeric, NumericInstances, Order, Rig, Ring, Rng, Semiring}
-import org.scanet.linalg.{IndexConversions, Slice}
+import org.scanet.linalg.Slice
 
 package object syntax {
 
@@ -14,7 +14,7 @@ package object syntax {
 
   object core extends CoreSyntax {}
 
-  trait LinalgSyntax extends CoreSyntax with IndexConversions
+  trait LinalgSyntax extends CoreSyntax
 
   object linalg extends LinalgSyntax with Slice.Syntax
 }
