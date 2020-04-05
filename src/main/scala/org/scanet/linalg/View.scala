@@ -7,6 +7,8 @@ case class View(originalShape: Shape, projection: Projection) {
   val projectedShapeFull: Shape = projection.shapeFull
   val projectedShapeShort: Shape = projection.shapeShort
 
+  def isScalar: Boolean = originalShape.isScalar
+
   def narrow(other: Projection): View = {
     require(other.rank <= projectedShapeShort.rank,
       s"$other projection's rank ${other.rank} should be less or equal " +

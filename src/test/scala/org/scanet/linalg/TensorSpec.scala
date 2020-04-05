@@ -3,7 +3,8 @@ package org.scanet.linalg
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scanet.core.Generator.uniform
 import org.scanet.test.CustomMatchers
-import org.scanet.syntax.core._
+import org.scanet.syntax.linalg._
+import org.scanet.linalg.Slice.syntax.::
 
 class TensorSpec extends AnyFlatSpec with CustomMatchers {
 
@@ -106,4 +107,34 @@ class TensorSpec extends AnyFlatSpec with CustomMatchers {
     Tensor.rand[Double](Shape(3), uniform(1L)) should
       be(Tensor.vector(8.958178688844853E-5, 0.872086605065287, 0.7943048233411579))
   }
+
+  "vector" should "be indexed" in {
+    Tensor.vector(0, 1, 2).get(1) should be(Tensor.vector(1))
+  }
+
+  "vector" should "be sliced with closed range" in {
+    Tensor.vector(0, 1, 2, 3).get(1 until 3) should be(Tensor.vector(1, 2))
+  }
+
+  "vector" should "be sliced with right opened range" in {
+    Tensor.vector(0, 1, 2, 3).get(1 until -1) should be(Tensor.vector(1, 2, 3))
+  }
+
+  "vector" should "remain identical when sliced with unbound range" in {
+    Tensor.vector(0, 1, 2, 3).get(::) should be(Tensor.vector(0, 1, 2, 3))
+  }
+
+  // todo
+
+  "matrix" should "be sliced by unbound range -> closed range" in {
+    val matrix = Tensor.eye[Int](3)
+    matrix(::, 1 until 3) should be(Tensor.matrix(Array(0, 0), Array(1, 0), Array(0, 1)))
+  }
+
+  "matrix" should "be sliced 2 times" in {
+    val matrix = Tensor.eye[Int](3)
+    matrix.get(0).get(1 until 3) should be(Tensor.vector(0, 0))
+  }
+
+  // todo
 }

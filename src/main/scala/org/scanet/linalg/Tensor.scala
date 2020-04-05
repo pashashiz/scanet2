@@ -9,61 +9,40 @@ import scala.collection.mutable.ArrayBuffer
 import scala.{specialized => sp}
 import org.scanet.syntax.core._
 
-class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor, val position: Int, val limit: Int) {
+class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
 
   val buffer: Buffer[A] = {
     def data: NativeArray[Byte] = native.tensor_data()
     data.to[A].asBuffer
   }
 
-  def toScalar: A = buffer.get(position + 0)
+  def toScalar: A = {
+    require(view.isScalar, "tensor should be a scalar")
+    buffer.get(0)
+  }
 
   def toArray: Array[A] = {
-    val array = buffer.position(position).limit(limit).toArray
-    buffer.position(0).limit(buffer.capacity)
-    array
+    val positions = view.positions
+    Array.tabulate(positions.length)(i => buffer.get(positions(i)))(Numeric[A].classTag)
   }
 
-  def toStream: Stream[A] = {
-    def next(index: Int): Stream[A] = {
-      if (limit == index) Stream.empty
-      else buffer.get(index) #:: next(index + 1)
-    }
-    next(position)
-  }
+  def apply[S1: CanBuildSliceFrom](s1: S1): Tensor[A] = get(s1)
+  def apply[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom](s1: S1, s2: S2): Tensor[A] = get(s1, s2)
+  def apply[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3): Tensor[A] = get(s1, s2, s3)
+  def apply[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom, S4: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3, s4: S4): Tensor[A] = get(s1, s2, s3, s4)
 
-  def get(index: Projection): Tensor[A] = {
-    require(shape.isInBound(index),
-      s"index rank $index is out of bound, should be within $shape")
-    // given (4) and shape (5, 5)
-    // slice into virtual blocks [0, 4], [5, 9], [10, 14], [15, 19], [20, 25]
-    // take block 4: [20, 25]
-    // given (4, 2) and shape (5, 5)
-    // slice into virtual blocks [0, 4], [5, 9], [10, 14], [15, 19], [20, 25]
-    // slice block [[0], [1], [2], [3], [4]]
-    // take block 4: [20, 25], take block 3: [2]
+  def get[S1: CanBuildSliceFrom](s1: S1): Tensor[A] = get(Projection(s1))
+  def get[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom](s1: S1, s2: S2): Tensor[A] = get(Projection(s1, s2))
+  def get[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3): Tensor[A] = get(Projection(s1, s2, s3))
+  def get[S1: CanBuildSliceFrom, S2: CanBuildSliceFrom, S3: CanBuildSliceFrom, S4: CanBuildSliceFrom](s1: S1, s2: S2, s3: S3, s4: S4): Tensor[A] = get(Projection(s1, s2, s3, s4))
 
-    // Tensor(5)(2)
-    // Tensor.view(20, 25) -> Tensor.view(2, 3) == Tensor.view(22, 23)
+  def get(index: Projection): Tensor[A] = new Tensor(native, view narrow index)
 
-
-    // View (*, *, *) & Shape(5, 5, 5)
-    // View (1, 2-3, *) -> ~Shape(3, 5)
-    // View (1, *) -> View(1, 2, *) -> ~Shape(5)
-    //
-    // View(shape + projection(slices)) -> current shape -> stream of sp elements
-
-//    val dimPower = shape.head
-    ////    val start = dimPower * index.head
-    ////    new Tensor[A](shape.tail, native, start, start + dimPower)
-    ???
-  }
-
-  override def toString: String = s"Tensor[${Numeric[A].show}](shape=$shape, size=${limit - position}: ${show()}"
+  override def toString: String = s"Tensor[${Numeric[A].show}](shape=${view.projectedShapeShort}: ${show()}"
 
   def show(size: Int = 20): String = {
-    if (shape.isScalar) {
-      buffer.get(position).toString
+    if (view.isScalar) {
+      toScalar.toString
     } else {
       // todo: format and limit when slicing is implemented
       // vector: [1, 2, 3]
@@ -79,15 +58,15 @@ class Tensor[@sp A: Numeric](val shape: Shape, val native: NativeTensor, val pos
       //     [4, 5, 6]
       //   ]
       // ]
-      s"[${toStream.take(size).mkString(", ")}]"
+      s"[${toArray.take(size).mkString(", ")}]"
     }
   }
 
-  override def hashCode(): Int = shape.hashCode() + toArray.foldLeft(1)((acc, a) => 31 * acc + a.hashCode())
+  override def hashCode(): Int = view.hashCode() + toArray.foldLeft(1)((acc, a) => 31 * acc + a.hashCode())
 
   override def equals(obj: Any): Boolean = obj match {
     case other: Tensor[A] => {
-      other.shape == shape && (other.toArray sameElements toArray)
+      other.view.projectedShapeShort == view.projectedShapeShort && (other.toArray sameElements toArray)
     }
     case _ => false
   }
@@ -102,7 +81,7 @@ object Tensor extends NumericInstances {
   def apply[@sp A: Numeric](native: NativeTensor): Tensor[A] = {
     // note: pre-initialized variables to overcome @sp issue https://github.com/scala/bug/issues/4511
     val shape = Shape.of(native)
-    new Tensor(shape, native, 0, shape.power)
+    new Tensor(native, View(shape))
   }
 
   def apply[@sp A: Numeric](data: Buffer[A], shape: Shape): Tensor[A] = {
