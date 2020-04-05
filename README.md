@@ -1,6 +1,6 @@
 # ScalaNet
 
-High performance distributed Neural networks on Scala.
+Type-safe, high performance, distributed Neural networks in Scala (not Python, finally...).
 
 ## Architecture Intro
 
