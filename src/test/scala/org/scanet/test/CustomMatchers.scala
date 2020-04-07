@@ -8,7 +8,7 @@ trait CustomMatchers extends Matchers {
 
   def haveShape(shape: Shape): Matcher[Tensor[_]] =
     tensor => {
-      MatchResult(tensor.view.projectedShapeShort == shape, s"${tensor.view} was not equal to $shape", "", Vector(tensor, shape))
+      MatchResult(tensor.view.shape == shape, s"${tensor.view} was not equal to $shape", "", Vector(tensor, shape))
     }
 
   def containData[A](data: Array[A]): Matcher[Tensor[A]] =

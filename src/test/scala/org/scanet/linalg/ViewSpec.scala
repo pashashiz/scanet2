@@ -8,22 +8,22 @@ class ViewSpec extends AnyFlatSpec with Matchers {
 
   "view" should "produce right projection when same size" in {
     View(Shape(5, 5, 5), Projection(1, 2 until 4, ::))
-      .projectedShapeShort should be(Shape(2, 5))
+      .shape should be(Shape(2, 5))
   }
 
   it should "produce right projection when smaller size" in {
     View(Shape(5, 5, 5), Projection(1))
-      .projectedShapeShort should be(Shape(5, 5))
+      .shape should be(Shape(5, 5))
   }
 
   it should "produce right projection when index" in {
     View(Shape(5, 5, 5), Projection(1, 1, 1))
-      .projectedShapeShort should be(Shape())
+      .shape should be(Shape())
   }
 
   it should "produce right projection when unbound right" in {
     View(Shape(5, 5), Projection(::, 3 until -1))
-      .projectedShapeShort should be(Shape(5, 2))
+      .shape should be(Shape(5, 2))
   }
 
   it should "fail when projection has higher rank" in {
@@ -52,12 +52,12 @@ class ViewSpec extends AnyFlatSpec with Matchers {
 
   it should "should be projected right first time" in {
     val view = View(Shape(5, 5, 5)) narrow Projection(1, 2 until 4, ::)
-    view.projectedShapeShort should be(Shape(2, 5))
+    view.shape should be(Shape(2, 5))
   }
 
   "view" should "should be projected right second time" in {
     val view = View(Shape(5, 5, 5)) narrow Projection(1, 2 until 4) narrow Projection(0 until 2)
-    view.projectedShapeShort should be(Shape(2, 5))
+    view.shape should be(Shape(2, 5))
   }
 
   it should "should fail to narrow when projection rank is greater" in {

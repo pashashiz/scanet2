@@ -2,30 +2,41 @@ package org.scanet.linalg
 
 import org.scanet.linalg.Slice.syntax._
 
-case class View(originalShape: Shape, projection: Projection) {
+case class View(src: IndexesSource, originalShape: Shape, projection: Projection) {
 
-  val projectedShapeFull: Shape = projection.shapeFull
-  val projectedShapeShort: Shape = projection.shapeShort
+  private val shapeFull: Shape = projection.shapeFull
+  val shape: Shape = projection.shapeShort
 
-  def isScalar: Boolean = originalShape.isScalar
+  def isScalar: Boolean = shape.isScalar
 
   def narrow(other: Projection): View = {
-    require(other.rank <= projectedShapeShort.rank,
-      s"$other projection's rank ${other.rank} should be less or equal " +
-        s"to shape's rank ${projectedShapeShort.rank}")
+    require(other.rank <= shape.rank,
+      s"projection $other has rank '${other.rank}' which is greater than " +
+        s"shape's rank '${shape.rank}'")
     val adjusted = other
-      .alignRight(projectedShapeShort.rank, ::.build)
-      .adjustTo(projectedShapeShort)
+      .alignRight(shape.rank, ::.build)
+      .adjustTo(shape)
       .alignLeft(originalShape.rank, 0.build)
-    require(projectedShapeFull.isInBound(adjusted),
-      s"$other projection is out of bound, should fit shape $projectedShapeShort")
-    new View(originalShape, projection narrow adjusted)
+    require(shapeFull.isInBound(adjusted),
+      s"projection $other is out of bound, should fit shape $shape")
+    View(src, originalShape, projection narrow adjusted)
+  }
+
+  def reshape(into: Shape): View = {
+    require(shape.power == into.power,
+      s"shape $shape cannot be reshaped into $into")
+    if (originalShape.power == shape.power && shape.power == projection.power) {
+      View(into)
+    } else {
+      View(ViewSource(this), into)
+    }
   }
 
   def positions: Array[Int] = {
+    val indexes = src.indexes
     def loop(dims: Seq[(Slice, Int)], absPos: Int, acc: Array[Int], seqPos: Int): (Array[Int], Int) = {
       if (dims.isEmpty) {
-        acc(seqPos) = absPos
+        acc(seqPos) = indexes(absPos)
         (acc, seqPos + 1)
       } else {
         val (slice, dimPower) = dims.head
@@ -36,17 +47,38 @@ case class View(originalShape: Shape, projection: Projection) {
       }
     }
     val dims = projection.slices.zip(originalShape.dimsPower)
-    val (array, _) = loop(dims, 0, Array.ofDim(projectedShapeShort.power), 0)
+    val (array, _) = loop(dims, 0, Array.ofDim(shape.power), 0)
     array
   }
 
-  override def toString: String = s"$originalShape x $projection -> $projectedShapeShort"
+  override def toString: String = {
+    val text = s"$originalShape x $projection = $shape"
+    src match {
+      case ViewSource(view) => s"$view -> $text"
+      case IdentitySource() => text
+    }
+  }
+}
+
+trait IndexesSource {
+  def indexes: Int => Int
+}
+
+sealed case class ViewSource(view: View) extends IndexesSource {
+  override def indexes: Int => Int = view.positions
+}
+
+sealed case class IdentitySource() extends IndexesSource {
+  override def indexes: Int => Int = identity[Int]
 }
 
 object View {
-  def apply(shape: Shape): View = {
-    new View(shape, Projection.of(shape))
-  }
+
+  def apply(shape: Shape): View = View(shape, Projection.of(shape))
   def apply(shape: Shape, projection: Projection): View =
-    new View(shape, projection.adjustTo(shape))
+    View(IdentitySource(), shape, projection)
+  def apply(indexes: IndexesSource, shape: Shape): View =
+    new View(indexes, shape, Projection.of(shape))
+  def apply(indexes: IndexesSource, shape: Shape, projection: Projection): View =
+    new View(indexes, shape, projection.adjustTo(shape))
 }

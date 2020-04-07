@@ -9,9 +9,11 @@ case class Projection(slices: List[Slice]) {
   def tail: Projection = Projection(slices.tail)
   def isEmpty: Boolean = slices.isEmpty
   def rank: Int = slices.size
+  def power: Int = shapeShort.power
+
   def adjustTo(shape: Shape): Projection = {
     require(shape.isInBound(this),
-      s"$this projection is out of bound, should fit shape $shape")
+      s"projection $this is out of bound, should fit shape $shape")
     val filledSlices = shape.dims
       .zip(alignRight(shape.rank, ::.build).slices)
       .map { case (shapeSize: Int, slice: Slice) => {

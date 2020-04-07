@@ -17,6 +17,7 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
   }
 
   def toScalar: A = {
+    // todo, fix
     require(view.isScalar, "tensor should be a scalar")
     buffer.get(0)
   }
@@ -38,7 +39,10 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
 
   def get(projection: Projection): Tensor[A] = new Tensor(native, view narrow projection)
 
-  override def toString: String = s"Tensor[${Numeric[A].show}](shape=${view.projectedShapeShort}: ${show()}"
+  def reshape(dims: Int*): Tensor[A] = reshape(Shape(dims: _*))
+  def reshape(shape: Shape): Tensor[A] = new Tensor(native, view reshape shape)
+
+  override def toString: String = s"Tensor[${Numeric[A].show}](shape=${view.shape}: ${show()}"
 
   def show(size: Int = 20): String = {
     if (view.isScalar) {
@@ -65,9 +69,9 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
   override def hashCode(): Int = view.hashCode() + toArray.foldLeft(1)((acc, a) => 31 * acc + a.hashCode())
 
   override def equals(obj: Any): Boolean = obj match {
-    case other: Tensor[A] => {
-      other.view.projectedShapeShort == view.projectedShapeShort && (other.toArray sameElements toArray)
-    }
+    case other: Tensor[A] =>
+      other.view.shape == view.shape &&
+        (other.toArray sameElements toArray)
     case _ => false
   }
 }
@@ -162,6 +166,8 @@ object Tensor extends NumericInstances {
     val increment = (last - first) / (size - 1)
     tabulate(size)(i => first plus (increment * i))
   }
+
+  def range(range: Range): Tensor[Int] = Tensor.range[Int](range.start, range.end, 1)
 
   def range[@sp A: Numeric](start: A, end: A, step: A, inclusive: Boolean = false): Tensor[A] = {
     val sizeAprox = ((end - start) / step).toInt + 1

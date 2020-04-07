@@ -8,22 +8,22 @@ import org.scanet.linalg.Slice.syntax.::
 
 class TensorSpec extends AnyFlatSpec with CustomMatchers {
 
-  "scalar tensor" should "be allocated" in {
+  "scalar" should "be allocated" in {
     Tensor.scalar(5) should
       (haveShape (Shape()) and containData (Array(5)))
   }
 
-  "vector tensor" should "be allocated" in {
+  "vector" should "be allocated" in {
     Tensor.vector(1, 2, 3) should
       (haveShape (Shape(3)) and containData (Array(1, 2, 3)))
   }
 
-  "matrix tensor" should "be allocated" in {
+  "matrix" should "be allocated" in {
       Tensor.matrix(Array(1, 2, 3), Array(4, 5, 6)) should
         (haveShape (Shape(2, 3)) and containData (Array(1, 2, 3, 4, 5, 6)))
   }
 
-  "n-dim tensor" should "be allocated" in {
+  "n3 tensor" should "be allocated" in {
     Tensor(Array(1, 2, 3, 4, 5, 6, 7, 8), Shape(2, 2, 2)) should
       (haveShape (Shape(2, 2, 2)) and containData (Array(1, 2, 3, 4, 5, 6, 7, 8)))
   }
@@ -37,7 +37,7 @@ class TensorSpec extends AnyFlatSpec with CustomMatchers {
     Tensor.zeros[Int](2, 2) should be(Tensor.matrix(Array(0, 0), Array(0, 0)))
   }
 
-  "tensor" should "be filled with a given number" in {
+  "matrix" should "be filled with a given number" in {
     Tensor.fill(2, 2)(1) should be(Tensor.matrix(Array(1, 1), Array(1, 1)))
   }
 
@@ -108,35 +108,109 @@ class TensorSpec extends AnyFlatSpec with CustomMatchers {
       be(Tensor.vector(8.958178688844853E-5, 0.872086605065287, 0.7943048233411579))
   }
 
-  "vector" should "be indexed" in {
-    Tensor.vector(0, 1, 2).get(1) should be(Tensor.vector(1))
+  "scalar" should "be indexed" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.scalar(5).get(0)
+    } should have message "requirement failed: " +
+      "projection (0) has rank '1' which is greater than shape's rank '0'"
   }
 
-  "vector" should "be sliced with closed range" in {
+  "vector when created with one element" should "be simplified into scalar" in {
+    Tensor.vector(5) should be(Tensor.scalar(5))
+  }
+
+  it should "be indexed" in {
+    Tensor.vector(0, 1, 2).get(1) should be(Tensor.scalar(1))
+  }
+
+  it should "be sliced with closed range" in {
     Tensor.vector(0, 1, 2, 3).get(1 until 3) should be(Tensor.vector(1, 2))
   }
 
-  "vector" should "be sliced with right opened range" in {
+  it should "be sliced with right opened range" in {
     Tensor.vector(0, 1, 2, 3).get(1 until -1) should be(Tensor.vector(1, 2, 3))
   }
 
-  "vector" should "remain identical when sliced with unbound range" in {
+  it should "remain identical when sliced with unbound range" in {
     Tensor.vector(0, 1, 2, 3).get(::) should be(Tensor.vector(0, 1, 2, 3))
   }
 
-  // todo
+  it should "fail to slice when higher rank" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.vector(0, 1, 2).get(0, 0)
+    } should have message "requirement failed: " +
+      "projection (0, 0) has rank '2' which is greater than shape's rank '1'"
+  }
 
-  "matrix" should "be sliced by unbound range -> closed range" in {
+  it should "fail to slice when out of bounds" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.vector(0, 1, 2).get(5)
+    } should have message "requirement failed: " +
+      "projection (5) is out of bound, should fit shape (3)"
+  }
+
+  "matrix" should "be indexed" in {
+    Tensor.eye[Int](3).get(0, 0) should be(Tensor.scalar(1))
+  }
+
+  it should "be sliced by unbound range -> closed range" in {
     val matrix = Tensor.eye[Int](3)
     matrix(::, 1 until 3) should be(Tensor.matrix(Array(0, 0), Array(1, 0), Array(0, 1)))
   }
 
-  "matrix" should "be sliced 2 times" in {
+  it should "be sliced 2 times" in {
     val matrix = Tensor.eye[Int](3)
     val vector = matrix(0)
     val slicedVector = vector(1 until -1)
     slicedVector should be(Tensor.vector(0, 0))
   }
 
-  // todo
+  it should "fail to slice when out of bounds" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.eye[Int](3).get(1, 1, 1)
+    } should have message "requirement failed: " +
+      "projection (1, 1, 1) has rank '3' which is greater than shape's rank '2'"
+  }
+
+  "n3 tensor" should "be indexed" in {
+    val tensor = Tensor(Array(1, 2, 3, 4, 5, 6, 7, 8), Shape(2, 2, 2))
+    tensor(1, 1, 1) should be(Tensor.scalar(8))
+  }
+
+  it should "be sliced" in {
+    val tensor = Tensor(Array(1, 2, 3, 4, 5, 6, 7, 8), Shape(2, 2, 2))
+    tensor(1, 1, ::) should be(Tensor.vector(7, 8))
+  }
+
+  "non sliced vector" should "be reshaped into matrix" in {
+    Tensor.vector(0, 1, 2, 3).reshape(2, 2) should be(Tensor.matrix(Array(0, 1), Array(2, 3)))
+  }
+
+  "non sliced matrix" should "be reshaped into vector" in {
+    Tensor.matrix(Array(0, 1), Array(2, 3)).reshape(4) should be(Tensor.vector(0, 1, 2, 3))
+  }
+
+  "sliced vector" should "be reshaped into matrix" in {
+    val matrix = Tensor.range(0 until 7).get(0 until 4).reshape(2, 2)
+    matrix should be(Tensor.matrix(Array(0, 1), Array(2, 3)))
+    matrix.view.toString should be("(7) x (:4) = (4) -> (2, 2) x (:2, :2) = (2, 2)")
+  }
+
+  "sliced reshaped into matrix vector" should "be sliced again" in {
+    val vector = Tensor.range(0 until 7).get(0 until 4).reshape(2, 2).get(0)
+    vector should be(Tensor.vector(0, 1))
+    vector.view.toString should be("(7) x (:4) = (4) -> (2, 2) x (0, :2) = (2)")
+  }
+
+  "non sliced tensor" should "fail to slice when power does not match" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.range(0 until 7).reshape(4, 4)
+    } should have message "requirement failed: shape (7) cannot be reshaped into (4, 4)"
+  }
+
+  "sliced tensor" should "fail to slice when power does not match" in {
+    the [IllegalArgumentException] thrownBy {
+      Tensor.range(0 until 7).get(0 until 4).reshape(4, 4)
+    } should have message "requirement failed: shape (4) cannot be reshaped into (4, 4)"
+  }
 }
