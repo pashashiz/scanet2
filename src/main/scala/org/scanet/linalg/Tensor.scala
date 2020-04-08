@@ -77,24 +77,24 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
     if (view.isScalar) {
       toScalar.toString
     } else {
-      val projection = Projection(shape.dims.zip(limits)
-        .map {case (dim, limit) => (0 until math.min(dim, limit)).build})
+      val projection = Projection.of(shape) narrow
+        Projection(limits.map(max => (0 until max).build))
       get(projection).showAll()
     }
   }
 
-  private def showAll(shift: String = ""): String = {
+  private def showAll(baseShift: String = ""): String = {
     if (isScalar) {
       toScalar.toString
     } else {
       val nl = System.lineSeparator
       val children = foldLeft("")((acc, next) => {
         val sep = if (acc.isEmpty) "" else if (rank > 1) s",$nl" else ", "
-        val nextShift = if (rank > 1) shift + "  " else ""
-        s"$acc$sep$nextShift${next.showAll(nextShift)}"
+        val shift = if (rank > 1) baseShift + "  " else ""
+        acc + sep + shift + next.showAll(shift)
       })
       if (rank > 1) {
-        s"[$nl$children$nl$shift]"
+        s"[$nl$children$nl$baseShift]"
       } else {
         s"[$children]"
       }
