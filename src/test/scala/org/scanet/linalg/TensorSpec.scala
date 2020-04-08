@@ -213,4 +213,55 @@ class TensorSpec extends AnyFlatSpec with CustomMatchers {
       Tensor.range(0 until 7).get(0 until 4).reshape(4, 4)
     } should have message "requirement failed: shape (4) cannot be reshaped into (4, 4)"
   }
+
+  "scalar tensor" should "fold left" in {
+    Tensor.scalar(5).foldLeft(0)(_ + _.toScalar) should be(5)
+  }
+
+  "vector tensor" should "fold left" in {
+    Tensor.range(0 until 7).foldLeft(0)(_ + _.toScalar) should be(21)
+  }
+
+  "matrix tensor" should "fold left" in {
+    Tensor.eye[Int](3).foldLeft(0)(_ + _.power) should be(9)
+  }
+
+  "scalar tensor" should "be shown" in {
+    println(Tensor.scalar(5).toString )
+    Tensor.scalar(5).toString should be("Tensor[Int](shape=()): 5")
+  }
+
+  "vector tensor" should "be shown" in {
+    Tensor.range(0 until 7).toString should
+      be("Tensor[Int](shape=(7)): [0, 1, 2, 3, 4, 5, 6]")
+  }
+
+  "matrix tensor" should "be shown" in {
+    Tensor.eye[Int](5).toString should be(
+      """Tensor[Int](shape=(5, 5)):
+        |[
+        |  [1, 0, 0, 0, 0],
+        |  [0, 1, 0, 0, 0],
+        |  [0, 0, 1, 0, 0]
+        |]"""
+       .stripMargin)
+  }
+
+  "n3 tensor" should "be shown" in {
+    Tensor.rand[Int](Shape(3, 3, 3), uniform(1)).toString should be(
+      """Tensor[Int](shape=(3, 3, 3)):
+        |[
+        |  [
+        |    [384748, -1151252339, -549383847],
+        |    [1612966641, -883454042, 1563994289],
+        |    [1331515492, -234691648, 672332705]
+        |  ],
+        |  [
+        |    [-2039128390, -1888584533, -294927845],
+        |    [1517050556, 92416162, -1713389258],
+        |    [2059776629, -1292618668, 562838985]
+        |  ]
+        |]"""
+        .stripMargin)
+  }
 }

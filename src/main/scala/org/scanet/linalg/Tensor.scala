@@ -8,6 +8,7 @@ import org.scanet.core.{Buffer, NativeArray, _}
 import scala.collection.mutable.ArrayBuffer
 import scala.{specialized => sp}
 import org.scanet.syntax.core._
+import org.scanet.linalg.Slice.syntax._
 
 class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
 
@@ -16,15 +17,29 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
     data.to[A].asBuffer
   }
 
+  def shape: Shape = view.shape
+  def rank: Int = shape.rank
+  def power: Int = shape.power
+  def isScalar: Boolean = shape.isScalar
+
   def toScalar: A = {
-    // todo, fix
-    require(view.isScalar, "tensor should be a scalar")
-    buffer.get(0)
+    require(isScalar, "tensor should be a scalar")
+    toArray.get(0)
   }
 
   def toArray: Array[A] = {
     val positions = view.positions
     Array.tabulate(positions.length)(i => buffer.get(positions(i)))(Numeric[A].classTag)
+  }
+
+  def foldLeft[Z](zero: Z)(f: (Z, Tensor[A]) => Z): Z = {
+    shape.dims match {
+      case Nil => f(zero, this)
+      case head::_ =>
+        (0 until head).foldLeft(zero)((acc, dim) => {
+          f(acc, get(dim))
+        })
+    }
   }
 
   def apply[S1: CanBuildSliceFrom](s1: S1): Tensor[A] = get(s1)
@@ -42,27 +57,47 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
   def reshape(dims: Int*): Tensor[A] = reshape(Shape(dims: _*))
   def reshape(shape: Shape): Tensor[A] = new Tensor(native, view reshape shape)
 
-  override def toString: String = s"Tensor[${Numeric[A].show}](shape=${view.shape}: ${show()}"
+  override def toString: String = {
+    val sep = if (rank > 1) System.lineSeparator else " "
+    s"Tensor[${Numeric[A].show}](shape=${view.shape}):$sep${show()}"
+  }
 
-  def show(size: Int = 20): String = {
+  def show(): String = {
+    val limits = (0 until rank).reverse.map {
+      case 0 => 20
+      case 1 => 3
+      case _ => 2
+    }
+    show(limits: _*)
+  }
+
+  def show(limits: Int*): String = {
+    require(limits.size == rank,
+      s"specified limits for ${limits.size} dimensions, but tensor has rank $rank")
     if (view.isScalar) {
       toScalar.toString
     } else {
-      // todo: format and limit when slicing is implemented
-      // vector: [1, 2, 3]
-      // matrix:
-      // [
-      //   [1, 2, 3],
-      //   [4, 5, 6]
-      // ]
-      // n3:
-      // [
-      //   [
-      //     [1, 2, 3],
-      //     [4, 5, 6]
-      //   ]
-      // ]
-      s"[${toArray.take(size).mkString(", ")}]"
+      val projection = Projection(shape.dims.zip(limits)
+        .map {case (dim, limit) => (0 until math.min(dim, limit)).build})
+      get(projection).showAll()
+    }
+  }
+
+  private def showAll(shift: String = ""): String = {
+    if (isScalar) {
+      toScalar.toString
+    } else {
+      val nl = System.lineSeparator
+      val children = foldLeft("")((acc, next) => {
+        val sep = if (acc.isEmpty) "" else if (rank > 1) s",$nl" else ", "
+        val nextShift = if (rank > 1) shift + "  " else ""
+        s"$acc$sep$nextShift${next.showAll(nextShift)}"
+      })
+      if (rank > 1) {
+        s"[$nl$children$nl$shift]"
+      } else {
+        s"[$children]"
+      }
     }
   }
 
