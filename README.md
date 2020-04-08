@@ -18,9 +18,7 @@ todo
 ## Tasks
 
 ## Tensor
-1. Finish tensor tests
-2. Add tensor reshape
-2. Enhance `toString` 
+DONE
 
 ## Tensor Flow Low Level
 1. Enhance Session
