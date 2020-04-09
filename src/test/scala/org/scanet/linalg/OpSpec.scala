@@ -19,6 +19,11 @@ class OpSpec extends AnyFlatSpec with Matchers {
     // simplify to: (5.0f.tensor + 5.0f.tensor).eval === 10.0f.tensor
   }
 
+  "plus same value" should "work" in {
+    val a = const("a", 5.0f)
+    plus("c", a, a).eval should be(Tensor.scalar(10.0f))
+  }
+
   "resulting tensor" should "be specialized" in {
     val session = new Session()
     val tensor: Tensor[Float] = session.run(const("a", 5.0f))
