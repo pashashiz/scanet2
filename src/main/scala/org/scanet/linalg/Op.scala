@@ -1,30 +1,49 @@
 package org.scanet.linalg
 
-import org.bytedeco.tensorflow.{GraphDef, Scope, SessionOptions, StringTensorPairVector, StringVector, TensorVector, Session => NativeSession}
+import org.bytedeco.tensorflow.{Add, GraphDef, Input, Scope, SessionOptions, StringTensorPairVector, StringVector, TensorVector, Session => NativeSession}
 import org.bytedeco.tensorflow.global.tensorflow.{Const, InitMain, TF_CHECK_OK}
 import org.scanet.core.Numeric
-import org.scanet.linalg.Op.NativeOutput
+import org.scanet.linalg.Op.{NativeOutput, const}
 
 import scala.{specialized => sp}
 
-
 case class Context(scope: Scope)
 
-case class Op[A](name: Option[String],
+case class Op[A: Numeric](name: Option[String],
                  inputs: List[Op[A]],
-                 shape: List[Int],
+                 shape: Shape,
                  compiler: Context => NativeOutput) {
   require(name.nonEmpty, "name cannot be empty")
+
+  def eval: Tensor[A] = {
+    // todo: better session impl
+    val session = new Session()
+    val tensor: Tensor[A] = session.run(this)
+    session.close
+    tensor
+  }
 }
 
 object Op {
 
   type NativeOutput = org.bytedeco.tensorflow.Output
 
-  def const[A](name: String, value: A): Op[A] = {
-    Op(Some(name), Nil, Nil, context => {
-      // todo: figure out how to call overloaded method here ...
-      Const(context.scope.WithOpName(name), value.asInstanceOf[Float])
+  def const[A: Numeric](name: String, value: A): Op[A] =
+    const(name, Tensor.scalar[A](value))
+
+  def const[A: Numeric](name: String, tensor: Tensor[A]): Op[A] = {
+    Op(Some(name), Nil, Shape(), context => {
+      Const(context.scope.WithOpName(name), tensor)
+    })
+  }
+
+  def plus[A: Numeric](name: String, left: Op[A], right: Op[A]): Op[A] = {
+    Op(Some(name), Nil, Shape(), context => {
+      new Add(
+        context.scope.WithOpName(name),
+        new Input(left.compiler(context)),
+        new Input(right.compiler(context))
+      ).asOutput()
     })
   }
 }
@@ -51,5 +70,10 @@ class Session {
     } finally {
       // if (session != null) session.close()
     }
+  }
+
+  def close: Void = {
+    // todo
+    null
   }
 }

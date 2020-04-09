@@ -1,20 +1,15 @@
 package org.scanet
 
-import org.scanet.core.{ConvertableFrom, ConvertableInstances, ConvertableTo, Dist, DistInstances, Eq, Field, Numeric, NumericInstances, Order, Rig, Ring, Rng, Semiring}
+import org.scanet.core.{Convertable, Dist, Numeric}
 import org.scanet.linalg.Slice
 
 package object syntax {
 
-  trait CoreSyntax extends ConvertableInstances with NumericInstances with DistInstances
-    with Semiring.ToSemiringOps with Rng.ToRngOps with Rig.ToRigOps with Ring.ToRingOps with Field.ToFieldOps
-    with Eq.ToEqOps with Order.ToOrderOps
-    with ConvertableTo.ToConvertableToOps with ConvertableFrom.ToConvertableFromOps
-    with Numeric.ToNumericOps
-    with Dist.ToDistOps
+  trait CoreSyntax extends Convertable.Syntax with Dist.Syntax with Numeric.Syntax
 
-  object core extends CoreSyntax {}
+  object core extends CoreSyntax
 
-  trait LinalgSyntax extends CoreSyntax
+  trait LinalgSyntax extends CoreSyntax with Slice.Syntax
 
-  object linalg extends LinalgSyntax with Slice.Syntax
+  object linalg extends LinalgSyntax
 }

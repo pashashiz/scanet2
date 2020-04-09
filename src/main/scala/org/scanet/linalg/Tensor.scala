@@ -111,7 +111,9 @@ class Tensor[@sp A: Numeric](val native: NativeTensor, val view: View) {
   }
 }
 
-object Tensor extends NumericInstances {
+object Tensor {
+
+  implicit def toNativeTensor[@sp A: Numeric](tensor: Tensor[A]): NativeTensor = tensor.native
 
   def allocate[@sp A: Numeric](shape: Shape): Tensor[A] = {
     Tensor(new NativeTensor(Numeric[A].tag, shape))

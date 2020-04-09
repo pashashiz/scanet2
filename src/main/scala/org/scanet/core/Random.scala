@@ -66,6 +66,22 @@ object Generator {
   def generate(from: Generator): (Generator, A)
 }
 
+object Dist {
+
+  trait Instances {
+    implicit def distDouble: Dist[Double] = new DistDouble {}
+    implicit def distFloat: Dist[Float] = new DistFloat {}
+    implicit def distLong: Dist[Long] = new DistLong {}
+    implicit def distInt: Dist[Int] = new DistInt {}
+    implicit def distShort: Dist[Short] = new DistShort {}
+    implicit def distByte: Dist[Byte] = new DistByte {}
+  }
+
+  trait Syntax extends Instances with Dist.ToDistOps
+
+  object syntax extends Syntax
+}
+
 trait DistDouble extends Dist[Double] {
   override def generate(gen: Generator): (Generator, Double) = {
     val (nextGen1, value1) = gen.generate
@@ -109,13 +125,4 @@ trait DistByte extends Dist[Byte] {
     val (nextGen, value) = gen.generate
     (nextGen, (value >>> 16).toByte)
   }
-}
-
-trait DistInstances {
-  implicit def distDouble: Dist[Double] = new DistDouble {}
-  implicit def distFloat: Dist[Float] = new DistFloat {}
-  implicit def distLong: Dist[Long] = new DistLong {}
-  implicit def distInt: Dist[Int] = new DistInt {}
-  implicit def distShort: Dist[Short] = new DistShort {}
-  implicit def distByte: Dist[Byte] = new DistByte {}
 }

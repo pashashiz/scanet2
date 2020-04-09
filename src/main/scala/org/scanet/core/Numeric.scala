@@ -81,12 +81,29 @@ import scala.reflect.ClassTag
 }
 
 object Numeric {
+
   val FloatTag: Int = DT_FLOAT
   val DoubleTag: Int = DT_DOUBLE
   val LongTag: Int = DT_INT64
   val IntTag: Int = DT_INT32
   val ShortTag: Int = DT_INT16
   val ByteTag: Int = DT_INT8
+
+  trait Instances {
+    implicit def floatInst: Numeric[Float] = new NumericFloat {}
+    implicit def doubleInst: Numeric[Double] = new NumericDouble {}
+    implicit def longInst: Numeric[Long] = new NumericLong {}
+    implicit def intInst: Numeric[Int] = new NumericInt {}
+    implicit def shortInst: Numeric[Short] = new NumericShort {}
+    implicit def byteInst: Numeric[Byte] = new NumericByte {}
+  }
+
+  trait Syntax extends Instances with Semiring.ToSemiringOps
+    with Rng.ToRngOps with Rig.ToRigOps with Ring.ToRingOps
+    with Field.ToFieldOps with Eq.ToEqOps with Order.ToOrderOps
+    with Numeric.ToNumericOps
+
+  object syntax extends Syntax
 }
 
 trait NumericFloat extends Numeric[Float] with ConvertableFromFloat with ConvertableToFloat {
@@ -189,13 +206,4 @@ trait NumericByte extends Numeric[Byte] with ConvertableFromByte with Convertabl
   override def div[B: ConvertableFrom](left: Byte, right: B): Byte =
     (left / ConvertableFrom[B].toByte(right)).toByte
   override def compare(x: Byte, y: Byte): Int = x.compareTo(y)
-}
-
-trait NumericInstances {
-  implicit def floatInst: Numeric[Float] = new NumericFloat {}
-  implicit def doubleInst: Numeric[Double] = new NumericDouble {}
-  implicit def longInst: Numeric[Long] = new NumericLong {}
-  implicit def intInst: Numeric[Int] = new NumericInt {}
-  implicit def shortInst: Numeric[Short] = new NumericShort {}
-  implicit def byteInst: Numeric[Byte] = new NumericByte {}
 }

@@ -3,6 +3,7 @@ package org.scanet.core
 import java.nio.{ByteBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer, Buffer => JavaBuffer}
 
 import org.scanet.core.Numeric._
+import org.scanet.core.Numeric.syntax._
 import scala.{specialized => sp}
 
 class Buffer[@sp A: Numeric](val original: JavaBuffer) extends Comparable[Buffer[A]] {
@@ -203,7 +204,7 @@ class Buffer[@sp A: Numeric](val original: JavaBuffer) extends Comparable[Buffer
   }
 }
 
-object Buffer extends NumericInstances {
+object Buffer {
 
   def apply[@sp A: Numeric](original: JavaBuffer): Buffer[A] = new Buffer[A](original)
 

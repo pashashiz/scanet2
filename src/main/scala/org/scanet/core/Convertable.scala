@@ -1,6 +1,26 @@
 package org.scanet.core
 
-object Conversions {}
+object Convertable {
+
+  trait Instances {
+    implicit def convertableToFloat: ConvertableTo[Float] = new ConvertableToFloat() {}
+    implicit def convertableToDouble: ConvertableTo[Double] = new ConvertableToDouble() {}
+    implicit def convertableToLong: ConvertableTo[Long] = new ConvertableToLong() {}
+    implicit def convertableToInt: ConvertableTo[Int] = new ConvertableToInt() {}
+    implicit def convertableToShort: ConvertableTo[Short] = new ConvertableToShort() {}
+    implicit def convertableToByte: ConvertableTo[Byte] = new ConvertableToByte() {}
+    implicit def convertableFromFloat: ConvertableFrom[Float] = new ConvertableFromFloat() {}
+    implicit def convertableFromDouble: ConvertableFrom[Double] = new ConvertableFromDouble() {}
+    implicit def convertableFromLong: ConvertableFrom[Long] = new ConvertableFromLong() {}
+    implicit def convertableFromInt: ConvertableFrom[Int] = new ConvertableFromInt() {}
+    implicit def convertableFromShort: ConvertableFrom[Short] = new ConvertableFromShort() {}
+    implicit def convertableFromByte: ConvertableFrom[Byte] = new ConvertableFromByte() {}
+  }
+
+  trait Syntax extends Instances with ConvertableTo.ToConvertableToOps with ConvertableFrom.ToConvertableFromOps
+
+  object syntax extends Syntax
+}
 
 trait ConvertableToFloat extends ConvertableTo[Float] {
   override def fromByte(n: Byte): Float = n.toFloat
@@ -127,19 +147,3 @@ trait ConvertableFromByte extends ConvertableFrom[Byte] {
   override def toType[B: ConvertableTo](a: Byte): B = ConvertableTo[B].fromByte(a)
   override def asString(a: Byte): String = a.toString
 }
-
-trait ConvertableInstances {
-  implicit def convertableToFloat: ConvertableTo[Float] = new ConvertableToFloat() {}
-  implicit def convertableToDouble: ConvertableTo[Double] = new ConvertableToDouble() {}
-  implicit def convertableToLong: ConvertableTo[Long] = new ConvertableToLong() {}
-  implicit def convertableToInt: ConvertableTo[Int] = new ConvertableToInt() {}
-  implicit def convertableToShort: ConvertableTo[Short] = new ConvertableToShort() {}
-  implicit def convertableToByte: ConvertableTo[Byte] = new ConvertableToByte() {}
-  implicit def convertableFromFloat: ConvertableFrom[Float] = new ConvertableFromFloat() {}
-  implicit def convertableFromDouble: ConvertableFrom[Double] = new ConvertableFromDouble() {}
-  implicit def convertableFromLong: ConvertableFrom[Long] = new ConvertableFromLong() {}
-  implicit def convertableFromInt: ConvertableFrom[Int] = new ConvertableFromInt() {}
-  implicit def convertableFromShort: ConvertableFrom[Short] = new ConvertableFromShort() {}
-  implicit def convertableFromByte: ConvertableFrom[Byte] = new ConvertableFromByte() {}
-}
-

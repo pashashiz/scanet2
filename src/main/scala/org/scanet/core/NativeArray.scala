@@ -2,6 +2,7 @@ package org.scanet.core
 
 import org.bytedeco.javacpp.{BytePointer, DoublePointer, FloatPointer, IntPointer, LongPointer, Pointer, ShortPointer}
 import org.scanet.core.Numeric._
+import org.scanet.core.Numeric.syntax._
 import scala.{specialized => sp}
 
 class NativeArray[@sp A: Numeric](val pointer: Pointer) extends AutoCloseable {
@@ -149,7 +150,7 @@ class NativeArray[@sp A: Numeric](val pointer: Pointer) extends AutoCloseable {
   }
 }
 
-object NativeArray extends NumericInstances {
+object NativeArray {
 
   loadNative()
 
