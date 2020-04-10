@@ -23,7 +23,7 @@ case class Op[A: Numeric](name: String, shape: Shape, inputs: List[Op[A]], compi
         val (newContext, out) = op.findOrCompile(currentContext)
         (newContext, out::outs)
       })
-    val output = compiler.apply(context1, outputs.map(out => new NativeInput(out)))
+    val output = compiler.apply(context1, outputs.reverse.map(out => new NativeInput(out)))
     val context2 = context1.copy(cache = context1.cache + (id -> output))
     (context2, output)
   }
