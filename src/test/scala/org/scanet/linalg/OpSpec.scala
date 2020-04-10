@@ -15,7 +15,7 @@ class OpSpec extends AnyFlatSpec with Matchers {
   }
 
   "plus" should "work" in {
-    plus("c", const("a", 5.0f), const("b", 5.0f)).eval should be(Tensor.scalar(10.0f))
+    plus(const("a", 5.0f), const("b", 5.0f)).eval should be(Tensor.scalar(10.0f))
     // simplify to: (5.0f.tensor + 5.0f.tensor).eval === 10.0f.tensor
   }
 
